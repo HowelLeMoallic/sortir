@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ParticipantRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -38,6 +40,22 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $mail = null;
+
+    #[ORM\ManyToOne(inversedBy: 'participants')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Campus $campus = null;
+
+    #[ORM\OneToMany(mappedBy: 'organisateur', targetEntity: Sortie::class)]
+    private Collection $orgaSortie;
+
+    #[ORM\ManyToMany(targetEntity: Sortie::class, inversedBy: 'participantsInscrits')]
+    private Collection $inscritSorties;
+
+    public function __construct()
+    {
+        $this->orgaSortie = new ArrayCollection();
+        $this->inscritSorties = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -172,6 +190,72 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     public function setMail(string $mail): self
     {
         $this->mail = $mail;
+
+        return $this;
+    }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self
+    {
+        $this->campus = $campus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sortie>
+     */
+    public function getOrgaSortie(): Collection
+    {
+        return $this->orgaSortie;
+    }
+
+    public function addOrgaSortie(Sortie $orgaSortie): self
+    {
+        if (!$this->orgaSortie->contains($orgaSortie)) {
+            $this->orgaSortie->add($orgaSortie);
+            $orgaSortie->setOrganisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrgaSortie(Sortie $orgaSortie): self
+    {
+        if ($this->orgaSortie->removeElement($orgaSortie)) {
+            // set the owning side to null (unless already changed)
+            if ($orgaSortie->getOrganisateur() === $this) {
+                $orgaSortie->setOrganisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sortie>
+     */
+    public function getInscritSorties(): Collection
+    {
+        return $this->inscritSorties;
+    }
+
+    public function addInscritSorty(Sortie $inscritSorty): self
+    {
+        if (!$this->inscritSorties->contains($inscritSorty)) {
+            $this->inscritSorties->add($inscritSorty);
+        }
+
+        return $this;
+    }
+
+    public function removeInscritSorty(Sortie $inscritSorty): self
+    {
+        $this->inscritSorties->removeElement($inscritSorty);
 
         return $this;
     }
