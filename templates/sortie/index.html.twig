@@ -16,6 +16,111 @@
 
 
     {# Afficher les filtres de recherche #}
+    <div>
+        <h2>Filtrer les sorties</h2>
+
+        {{ form_start(formSorties) }}
+        <div class="filtres">
+            <div>
+                {{ form_row(formSorties.campus) }}
+                {{ form_row(formSorties.recherche) }}
+                <div class="date-interval">
+                    {{ form_row(formSorties.dateDebut) }}
+                    {{ form_row(formSorties.dateFin) }}
+                </div>
+            </div>
+            <div>
+
+                {{ form_row(formSorties.organisateur) }}
+                {{ form_row(formSorties.inscrit) }}
+                {{ form_row(formSorties.nonInscrit) }}
+                {{ form_row(formSorties.sortiesPassees) }}
+
+            </div>
+        </div>
+        {{ form_end(formSorties) }}
+
+
+    </div>
+
+
+
+
+
+
+
+    {# Afficher la liste des sorties #}
+    <table class="tableau">
+        <thead>
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Date de clôture</th>
+                <th>Nombres d'inscrits</th>
+                <th>Etat</th>
+                <th>Inscrit</th>
+                <th>Organisateur</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+        {% for sortie in sorties %}
+            <tr>
+                <td>{{ sortie.nom }}</td>
+                <td>{{ sortie.dateHeureDebut.format('d/m/y') }}</td>
+                <td>{{ sortie.dateLimiteInscription.format('d/m/Y') }}</td>
+                <td>{{ sortie.participantsInscrits.count }}/{{ sortie.nbInscriptionMax }}</td>
+                <td>{{ sortie.etat.libelle }}</td>
+                <td>
+                    {% if sortie.participantsInscrits.contains(app.user) %}
+                        <span>X</span>
+                    {% else %}
+                        <span> </span>
+
+                    {% endif %}
+                </td>
+                <td>{{ sortie.organisateur.pseudo }}</td>
+                <td>
+                    {% if sortie.etat.libelle != 'En création'%}
+                        <a href="">Afficher</a>
+                        {% if sortie.etat.libelle == 'Ouvert'%}
+                            {% if sortie.organisateur == app.user %}
+                                <span> - </span>
+                                <a href="">Annuler</a>
+                            {% else %}
+                                {% if sortie.participantsInscrits.contains(app.user) %}
+                                    <span> - </span>
+                                    <a href="">Se désister</a>
+                                {% else %}
+                                    <span> - </span>
+                                    <a href="">S'incrire</a>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+
+                    {% elseif sortie.etat.libelle == 'En création' and sortie.organisateur == app.user %}
+                        <a href="">Modifier</a>
+                        <span> - </span>
+                        <a href="">Publier</a>
+                    {% endif %}
+                </td>
+
+            </tr>
+
+        {% endfor %}
+        </tbody>
+
+    </table>
+
+
+    <div>
+        <button>
+            <a href="">Créer une sortie</a>
+        </button>
+    </div>
+
 
 
 

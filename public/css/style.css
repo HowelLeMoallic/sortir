@@ -64,3 +64,17 @@ nav ul {
 
 }
 
+table, th, td {
+    border: 1px solid black;
+}
+
+.filtres{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.date-interval{
+    display: flex;
+    justify-content: space-between;
+}
