@@ -11,6 +11,8 @@ class ParticipantController extends AbstractController
     #[Route('/profilUser', name: 'profil_connecte')]
     public function index(): Response
     {
+
+
         return $this->render('participant/profilConnecter.html.twig', [
             'controller_name' => 'ParticipantController',
         ]);
