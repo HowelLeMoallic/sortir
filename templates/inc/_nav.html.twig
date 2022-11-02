@@ -1,11 +1,21 @@
 <nav>
-    <ul>
-        <li>
-            {% if app.user %}
+
+    
+    {% if app.user %}
+        <ul>
+            <li>
+                <a href="{{ path('accueil') }}">Accueil</a>
+            </li>
+            <li>
+                <a href="{{ path('profil_connecte', {'id' : app.user.id}) }}">Mon profil</a>
+            </li>
+            <li>
+
                 <a href="{{ path('app_logout') }}">Déconnexion</a>
-            {% else %}
-                <a href="{{ path('app_login') }}">Connexion</a>
-            {% endif %}
-        </li>
-    </ul>
+
+
+            </li>
+        </ul>
+    {% endif %}
+
 </nav>
