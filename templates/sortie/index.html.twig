@@ -83,7 +83,7 @@
                 <td>{{ sortie.organisateur.pseudo }}</td>
                 <td>
                     {% if sortie.etat.libelle != 'En création'%}
-                        <a href="">Afficher</a>
+                        <a href="{{ path('detail_event', {'id': sortie.id}) }}">Afficher</a>
                         {% if sortie.etat.libelle == 'Ouvert'%}
                             {% if sortie.organisateur == app.user %}
                                 <span> - </span>
