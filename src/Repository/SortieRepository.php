@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Sortie;
+use App\Form\Model\FiltresSortiesFormModel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Sortie>
@@ -39,6 +42,35 @@ class SortieRepository extends ServiceEntityRepository
         }
     }
 
+    public function findSortiesByFiltres(FiltresSortiesFormModel $filtres): array
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb->addSelect('s');
+
+        if ($filtres->getCampus()) {
+            $qb->andWhere('s.campus = :campus')
+                ->setParameter('campus', $filtres->getCampus());
+        }
+
+        if ($filtres->getRecherche()) {
+            $qb->andWhere('s.nom like %:nom%')
+                ->setParameter('nom', $filtres->getRecherche());
+        }
+
+        if ($filtres->getDateDebut()) {
+            $qb->andWhere('s.dateHeureDebut >= :debut')
+                ->setParameter('debut', $filtres->getDateDebut());
+        }
+
+        if ($filtres->getDateFin()) {
+            $qb->andWhere('s.dateHeureDebut <= :fin')
+                ->setParameter('fin', $filtres->getDateFin());
+        }
+
+
+        return $qb->getQuery()->getResult();
+    }
+    
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects
 //     */

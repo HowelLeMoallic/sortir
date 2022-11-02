@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -26,40 +27,46 @@ class FiltresSortiesType extends AbstractType
                     },
                     'choice_label' => 'nom',
                     'expanded' => false,
-                    'multiple' => false
+                    'multiple' => false,
+                    'required' => false
                 ]
             )
             ->add('recherche', TextType::class, [
-                'label' => 'Le nom de la sortie contient :'
+                'label' => 'Le nom de la sortie contient :',
+                'required' => false
             ])
-            ->add('dateDebut', DateTimeType::class, [
+            ->add('dateDebut', DateType::class, [
                 'label' => 'Entre',
                 'widget' => 'single_text',
-
+                'required' => false
 
 
             ])
-            ->add('dateFin', DateTimeType::class, [
+            ->add('dateFin', DateType::class, [
                 'label' => 'et',
                 'widget' => 'single_text',
+                'required' => false
 
             ])
             ->add('organisateur', CheckboxType::class, [
                 'label' => 'Sorties dont je suis l\'organisateur/trice',
+                'required' => false
 
 
             ])
             ->add('inscrit', CheckboxType::class, [
                 'label' => 'Sorties auxquelles je suis incrit/e',
+                'required' => false
 
             ])
             ->add('nonInscrit', CheckboxType::class, [
                 'label' => 'Sorties auxquelles je ne suis pas incrit/e',
+                'required' => false
 
             ])
             ->add('sortiesPassees', CheckboxType::class, [
                 'label' => 'Sorties passées',
-
+                'required' => false
             ])
             ->add('Recherche', SubmitType::class)
         ;

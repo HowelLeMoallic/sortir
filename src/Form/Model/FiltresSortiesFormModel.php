@@ -18,7 +18,7 @@ class FiltresSortiesFormModel
     public bool $organisateur;
     public bool $inscrit;
     public bool $nonInscrit;
-    public bool $sortiesPassées;
+    public bool $sortiesPassees;
 
     /**
      * @return Campus
@@ -149,18 +149,18 @@ class FiltresSortiesFormModel
     /**
      * @return bool
      */
-    public function isSortiesPassées(): bool
+    public function isSortiesPassees(): bool
     {
-        return $this->sortiesPassées;
+        return $this->sortiesPassees;
     }
 
     /**
      * @param bool $sortiesPassées
      * @return FiltresSortiesFormModel
      */
-    public function setSortiesPassées(bool $sortiesPassées): FiltresSortiesFormModel
+    public function setSortiesPassees(bool $sortiesPassees): FiltresSortiesFormModel
     {
-        $this->sortiesPassées = $sortiesPassées;
+        $this->sortiesPassees = $sortiesPassees;
         return $this;
     }
 
