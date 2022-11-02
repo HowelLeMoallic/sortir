@@ -13,21 +13,25 @@ class VilleFixtures extends Fixture
         $ploneis = new Ville();
         $ploneis->setNom('Plonéis');
         $ploneis->setCodePostal('29710');
+        $this->addReference('ploneis', $ploneis);
         $manager->persist($ploneis);
 
         $bruz = new Ville();
         $bruz->setNom('Bruz');
         $bruz->setCodePostal('35170');
+        $this->addReference('bruz', $bruz);
         $manager->persist($bruz);
 
         $chauray = new Ville();
         $chauray->setNom('Chauray');
         $chauray->setCodePostal('79180');
+        $this->addReference('chauray', $chauray);
         $manager->persist($chauray);
 
         $orvault = new Ville();
         $orvault->setNom('Orvault');
         $orvault->setCodePostal('44700');
+        $this->addReference('orvault', $orvault);
         $manager->persist($orvault);
 
         $manager->flush();
