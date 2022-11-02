@@ -17,7 +17,6 @@ class ParticipantType extends AbstractType
     {
         $builder
             ->add('pseudo')
-            ->add('password')
             ->add('nom')
             ->add('prenom')
             ->add('telephone')
@@ -32,6 +31,7 @@ class ParticipantType extends AbstractType
                 'multiple' => false
                 ]
             )
+//            ->add('photo', )
             ->add('submit', SubmitType::class)
         ;
     }

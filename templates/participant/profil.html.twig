@@ -6,9 +6,19 @@
 
     <h1>Vous etes connecté en tant que {{ app.user.pseudo}} </h1>
 
-    {{ form(formProfil) }}
-
-
+    {{ form_start(formProfil) }}
+        {{ form_row(formProfil.pseudo) }}
+        {{ form_row(formProfil.prenom) }}
+        {{ form_row(formProfil.nom) }}
+        {{ form_row(formProfil.telephone) }}
+        {{ form_row(formProfil.mail) }}
+        <label for="MotDePasse">Mot De Passe :</label>
+        <input type="text" name="MotDePasse">
+        <br>
+        <label for="Confirmation">Confirmation :</label>
+        <input type="text" name="Confirmation">
+        {{ form_row(formProfil.campus) }}
+    {{ form_end(formProfil) }}
 
 {% endblock %}
 
