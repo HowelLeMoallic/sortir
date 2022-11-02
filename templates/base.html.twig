@@ -22,16 +22,14 @@
                 <img src="{{ asset('images/ENIEcole.jpg') }}" alt="logo ENI">
                 {% include 'inc/_nav.html.twig' %}
             </header>
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash flash-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
             {% block body %}
-                <main>
-                    {% for label, messages in app.flashes %}
-                        {% for message in messages %}
-                            <div class="flash flash-{{ label }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endfor %}
-                </main>
             {% endblock %}
 
         </div>

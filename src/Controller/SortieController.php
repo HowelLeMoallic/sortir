@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Sortie;
 use App\Form\FiltresSortiesType;
 use App\Form\Model\FiltresSortiesFormModel;
+use App\Form\SortieType;
 use App\Repository\SortieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,10 +31,21 @@ class SortieController extends AbstractController
 
         }
 
-
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
             'formSorties'=>$form->createView()
         ]);
     }
+
+    #[Route('/sortie/detail/{id}', name: 'detail_event')]
+    public function detailSortie(int $id, SortieRepository $sortieRepository){
+
+        $event = $sortieRepository->find($id);
+        $form = $this->createForm(SortieType::class, $event);
+
+        return $this->renderForm('sortie/detail.html.twig', [
+           'formDetail' => $form,
+        ]);
+    }
+
 }

@@ -14,12 +14,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class ParticipantController extends AbstractController
 {
     #[Route('/profilUser', name: 'profil_connecte')]
-    public function profil(Request $request,
-                           EntityManagerInterface $em, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function profil(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $userPasswordHasher): Response
     {
+        //Récupération de l'utilisateur
         $user = $this->getUser();
+        //Création du formulaire
         $form = $this->createForm(ParticipantType::class, $user);
-
+        //récupère les infos saisies et modifie l'objet user
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
@@ -27,9 +28,11 @@ class ParticipantController extends AbstractController
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $form->get('plainPassword')->getData()));
 
+            //Ajout dans la bdd
             $em->persist($user);
             $em->flush();
 
+            //Message de success
             $this->addFlash('success', 'Profil modifié avec succès.');
             return $this->redirectToRoute('accueil');
         }
@@ -38,7 +41,6 @@ class ParticipantController extends AbstractController
         return $this->render('participant/profil.html.twig', [
             'formProfil' => $form->createView()
         ]);
-
 
     }
 }
