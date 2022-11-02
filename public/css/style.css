@@ -56,3 +56,11 @@ nav ul {
     list-style: none;
     padding-left: 0;
 }
+
+.info-participant{
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+
+}
+

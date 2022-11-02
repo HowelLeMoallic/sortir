@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Accueil{% endblock %}
+
+{% block body %}
+
+
+    {# Affichage de la date du jour et du nom du participant #}
+    <div class="info-participant">
+        <div>
+            <p>Date du jour : {{ 'now'|date('d/m/Y') }}</p>
+            <p>Participant : {{ app.user.pseudo }}</p>
+        </div>
+
+    </div>
+
+
+    {# Afficher les filtres de recherche #}
+
+
+
+{% endblock %}
