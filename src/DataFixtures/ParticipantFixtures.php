@@ -35,6 +35,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $howel->setTelephone('0101010101');
         $howel->setMail('howel.lemoallic2022@campus-eni.fr');
         $howel->setCampus($this->getReference('rennes'));
+        $this->addReference('howel', $howel);
         $manager->persist($howel);
 
         $tanguy = new Participant();
@@ -45,6 +46,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $tanguy->setTelephone('0202020202');
         $tanguy->setMail('tanguy.mathurin2022@campus-eni.fr');
         $tanguy->setCampus($this->getReference('rennes'));
+        $this->addReference('tanguy', $tanguy);
         $manager->persist($tanguy);
 
 
