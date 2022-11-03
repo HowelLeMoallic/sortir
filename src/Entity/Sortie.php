@@ -56,6 +56,7 @@ class Sortie
     public function __construct()
     {
         $this->participantsInscrits = new ArrayCollection();
+        $this->etat->setLibelle('En création');
     }
 
     public function getId(): ?int
