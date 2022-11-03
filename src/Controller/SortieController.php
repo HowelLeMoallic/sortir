@@ -5,11 +5,15 @@ namespace App\Controller;
 use App\Entity\Etat;
 use App\Entity\Sortie;
 use App\Entity\Ville;
+use App\Form\AnnulerSortieType;
+use App\Form\CreationSortieType;
 use App\Form\FiltresSortiesType;
+use App\Form\InfoSortieType;
 use App\Form\Model\FiltresSortiesFormModel;
 
 
 use App\Form\SortieType;
+use App\Repository\EtatRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use App\Repository\VilleRepository;
@@ -81,20 +85,28 @@ class SortieController extends AbstractController
                                     EntityManagerInterface $entityManager)
     {
 
-
         //Requête pour récupérer qu'une sortie en fonction de son id
         $sortie = $sortieRepository->find($id);
-        //Récupére l'utilisateur connecter avec sécurité
-        $user = $this->tokenStorage->getToken()->getUser();
-        if(!empty($user)){
-            $userId = $user->getId();
-        }
-        //Ajout du participant dans la sortie
-        $sortie->addParticipantsInscrit($participantRepository->find($userId));
+        if($sortie->getDateLimiteInscription() > new \DateTime() && $sortie->getParticipantsInscrits()->count() < $sortie->getNbInscriptionMax()){
 
-        $entityManager->persist($sortie);
-        $entityManager->flush();
-        $this->addFlash('success', 'Vous êtes bien inscrit à l\'activité '.$sortie->getNom());
+            //Récupére l'utilisateur connecter avec sécurité
+            $user = $this->tokenStorage->getToken()->getUser();
+            if(!empty($user)){
+                $userId = $user->getId();
+            }
+            //Ajout du participant dans la sortie
+            $sortie->addParticipantsInscrit($participantRepository->find($userId));
+
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+            $this->addFlash('success', 'Vous êtes bien inscrit à l\'activité '.$sortie->getNom());
+
+        }
+        else{
+
+            $this->addFlash('error', 'Vous ne pouvez pas vous inscrire à cette activité car la date limite d\'inscription est dépassée');
+        }
+
         return $this->redirectToRoute('accueil');
     }
 
@@ -104,19 +116,24 @@ class SortieController extends AbstractController
     {
 
         $sortie = $sortieRepository->find($id);
+        if($sortie->getDateLimiteInscription() > new \DateTime()){
+            $user=$this->tokenStorage->getToken()->getUser();
+            if (!empty($user)){
+                $userID = $user->getId();
+            }
 
-        $user=$this->tokenStorage->getToken()->getUser();
-        if (!empty($user)){
-            $userID = $user->getId();
+            $participant = $participantRepository->find($userID);
+            $sortie->removeParticipantsInscrit($participant);
+
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Vous êtes bien désinscrit à l\'activité '.$sortie->getNom());
+        }
+        else{
+            $this->addFlash('error', 'Vous ne pouvez pas vous désinscrire à cette activité car la date limite d\'inscription est dépassée');
         }
 
-        $participant = $participantRepository->find($userID);
-        $sortie->removeParticipantsInscrit($participant);
-
-        $entityManager->persist($sortie);
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Vous êtes bien désinscrit à l\'activité '.$sortie->getNom());
 
         return $this->redirectToRoute('accueil');
 
@@ -190,10 +207,6 @@ class SortieController extends AbstractController
 
             return $this->redirectToRoute('accueil');
         }
-
-
-
-
 
         return $this->render('sortie/annuler.html.twig', [
             'sortie' => $sortie,
