@@ -77,14 +77,15 @@ class SortieRepository extends ServiceEntityRepository
         }
 
         if ($filtres->getInscrit()) {
-            $qb->andWhere('sortie.participantsInscrits IN (:user)')
+            $qb->andWhere(':user MEMBER OF sortie.participantsInscrits')
                 ->setParameter('user', $user);
 
 
         }
 
         if ($filtres->getNonInscrit()) {
-
+            $qb->andWhere(':user NOT MEMBER sortie.participantsInscrits')
+                ->setParameter('user', $user);
         }
 
         if ($filtres->getSortiesPassees()) {

@@ -79,11 +79,7 @@ class SortieController extends AbstractController
                                     EntityManagerInterface $entityManager)
     {
 
-        $filtres = new FiltresSortiesFormModel();
-        $form = $this->createForm(FiltresSortiesType::class, $filtres);
 
-        //Requête pour récupérer toutes les sorties
-        $sorties = $sortieRepository->findAll();
         //Requête pour récupérer qu'une sortie en fonction de son id
         $sortie = $sortieRepository->find($id);
         //Récupére l'utilisateur connecter avec sécurité
@@ -97,20 +93,14 @@ class SortieController extends AbstractController
         $entityManager->persist($sortie);
         $entityManager->flush();
         $this->addFlash('success', 'Vous êtes bien inscrit à l\'activité '.$sortie->getNom());
-        return $this->render('sortie/index.html.twig', [
-            'sorties' => $sorties,
-            'formSorties'=>$form->createView()
-        ]);
+        return $this->redirectToRoute('accueil');
     }
 
     #[Route('/desinscription/{id}', name: 'desinscription_participant', requirements: ['id' => '\d+'])]
     public function desinscription(int $id, SortieRepository $sortieRepository, ParticipantRepository $participantRepository,
                                         EntityManagerInterface $entityManager)
     {
-        $filtres = new FiltresSortiesFormModel();
-        $form = $this->createForm(FiltresSortiesType::class, $filtres);
 
-        $sorties = $sortieRepository->findAll();
         $sortie = $sortieRepository->find($id);
 
         $user=$this->tokenStorage->getToken()->getUser();
@@ -126,11 +116,7 @@ class SortieController extends AbstractController
 
         $this->addFlash('success', 'Vous êtes bien désinscrit à l\'activité '.$sortie->getNom());
 
-        return $this->renderForm('sortie/index.html.twig', [
-
-            'sorties' => $sorties,
-            'formSorties' => $form
-        ]);
+        return $this->redirectToRoute('accueil');
 
     }
 
