@@ -159,14 +159,6 @@ class Sortie
         return $this;
     }
 
-    #[ORM\PrePersist]
-    public function setEtatValue():void
-    {
-        if($this->getEtat() == null){
-            //$this->setEtat();
-        }
-    }
-
     public function getCampus(): ?Campus
     {
         return $this->campus;

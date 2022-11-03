@@ -2,15 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\Sortie;
 use App\Entity\Ville;
-use App\Form\CreationSortieType;
 use App\Form\FiltresSortiesType;
 use App\Form\Model\FiltresSortiesFormModel;
 
 
-use App\Form\InfoSortieType;
-use App\Repository\EtatRepository;
+use App\Form\SortieType;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use App\Repository\VilleRepository;
@@ -126,7 +125,6 @@ class SortieController extends AbstractController
     #[Route('/sortie/creation', name: 'creation_sortie')]
     public function creation(Request $request, EntityManagerInterface $entityManager, VilleRepository $villeRepository, EtatRepository $etatRepository)
     {
-        //Création d'un objet sortie
         $sortie = new Sortie();
         //Récupéré l'utilisateur en cours
         $user = $this->tokenStorage->getToken()->getUser();
@@ -166,4 +164,43 @@ class SortieController extends AbstractController
             'villes' => $villes,
         ]);
     }
+
+    #[Route('/sortie/annuler/{id}', name: 'annuler_sortie', requirements: ['id' => '\d+'])]
+    public function AnnulerSortie(int $id, SortieRepository $sortieRepository, Request $request, EntityManagerInterface $entityManager, EtatRepository $etatRepository)
+    {
+        $sortie = $sortieRepository->find($id);
+
+        $description = $sortie->getInfosSortie();
+
+        $formMotif = $this->createForm(AnnulerSortieType::class, $sortie);
+
+        $formMotif->handleRequest($request);
+
+
+
+
+        if ($formMotif->isSubmitted() && $formMotif->isValid()) {
+            $sortie->setInfosSortie($description . ' ANNULEE ' . $sortie->getInfosSortie());
+            $etat = $etatRepository->findOneBy(['libelle' => 'Annulé']);
+            $sortie->setEtat($etat);
+
+
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('accueil');
+        }
+
+
+
+
+
+        return $this->render('sortie/annuler.html.twig', [
+            'sortie' => $sortie,
+            'formMotif' => $formMotif->createView(),
+
+        ]);
+
+    }
+
 }

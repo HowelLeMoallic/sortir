@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Annuler{% endblock %}
+
+{% block body %}
+    <div class="centrer">
+        <h1>Annuler une sortie</h1>
+        <div class="form-annuler-sortie">
+            <section class="section-champ">
+                <div>Nom de la sortie</div>
+                <div>{{ sortie.nom }}</div>
+            </section>
+            <section class="section-champ">
+                <div>Date de la sortie</div>
+                <div>{{ sortie.dateHeureDebut|date('d/m/Y') }}</div>
+            </section>
+            <section class="section-champ">
+                <div>Campus</div>
+                <div>{{ sortie.campus.nom }}</div>
+            </section>
+            <section class="section-champ">
+                <div>Lieu</div>
+                <div>{{ sortie.lieu.nom }} {{ sortie.lieu.rue }} {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</div>
+            </section>
+
+            <form action="{{ path('annuler_sortie', {'id': sortie.id}) }}" method="post" id="motif">
+                {{ form_start(formMotif) }}
+
+                <section class="section-champ">
+                    {{ form_label(formMotif.infosSortie) }}
+                    {{ form_widget(formMotif.infosSortie) }}
+                </section>
+
+                <section class="section-champ">
+                    {{ form_row(formMotif.submit) }}
+                    <button>
+                        <a href="{{ path('accueil') }}">Annuler</a>
+                    </button>
+                </section>
+                {{ form_end(formMotif) }}
+
+
+
+            </form>
+
+
+
+        </div>
+    </div>
+
+
+
+
+{% endblock %}

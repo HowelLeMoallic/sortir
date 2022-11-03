@@ -81,7 +81,7 @@
                         {% if sortie.etat.libelle == 'Ouvert'%}
                             {% if sortie.organisateur == app.user %}
                                 <span> - </span>
-                                <a href="">Annuler</a>
+                                <a href="{{ path('annuler_sortie', {'id': sortie.id}) }}">Annuler</a>
                             {% else %}
                                 {% if sortie.participantsInscrits.contains(app.user) %}
                                     <span> - </span>
