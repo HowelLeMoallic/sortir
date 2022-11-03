@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use function PHPUnit\Framework\isEmpty;
 
 class ParticipantController extends AbstractController
 {
@@ -25,8 +26,11 @@ class ParticipantController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            // encode the plain password
-            $user->setPassword($userPasswordHasher->hashPassword($user, $form->get('plainPassword')->getData()));
+            if (!isEmpty($user->getPassword()))
+            {
+                // encode the plain password
+                $user->setPassword($userPasswordHasher->hashPassword($user, $form->get('plainPassword')->getData()));
+            }
 
             //Ajout dans la bdd
             $em->persist($user);

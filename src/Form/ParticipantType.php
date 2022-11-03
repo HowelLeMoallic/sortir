@@ -34,17 +34,18 @@ class ParticipantType extends AbstractType
                 'invalid_message' => 'Le mot de passe ne correspond pas à sa confirmation.',
                 'first_options' => [
                     'label' => 'Mot de passe',
-                    'help' => 'Le mot de passe doit contenir au minimum 8 caractères dont une minuscule, une majuscule, un chiffre et un caractère spécial.',
+                    //'help' => 'Le mot de passe doit contenir au minimum 8 caractères dont une minuscule, une majuscule, un chiffre et un caractère spécial.',
                 ],
                 'second_options' => [
                     'label' => 'Confirmation du mot de passe.',
                 ],
                 'mapped' => false,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez renseigner un mot de passe.',
-                    ]),
-                ]
+                'required' => false,
+//                'constraints' => [
+//                    new NotBlank([
+//                        'message' => 'Veuillez renseigner un mot de passe.',
+//                    ]),
+//                ]
             ])
             ->add('campus', EntityType::class, [
                 'class' =>Campus::class,
