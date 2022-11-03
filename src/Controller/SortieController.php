@@ -66,8 +66,11 @@ class SortieController extends AbstractController
         $event = $sortieRepository->find($id);
         $form = $this->createForm(SortieType::class, $event);
 
+        $participants = $event->getParticipantsInscrits();
+
         return $this->renderForm('sortie/detail.html.twig', [
            'formDetail' => $form,
+            'participants' => $participants
         ]);
     }
 
@@ -93,11 +96,54 @@ class SortieController extends AbstractController
 
         $entityManager->persist($sortie);
         $entityManager->flush();
-
+        $this->addFlash('success', 'Vous êtes bien inscrit à l\'activité '.$sortie->getNom());
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
             'formSorties'=>$form->createView()
         ]);
     }
 
+    #[Route('/desinscription/{id}', name: 'desinscription_participant', requirements: ['id' => '\d+'])]
+    public function desinscription(int $id, SortieRepository $sortieRepository, ParticipantRepository $participantRepository,
+                                        EntityManagerInterface $entityManager)
+    {
+        $filtres = new FiltresSortiesFormModel();
+        $form = $this->createForm(FiltresSortiesType::class, $filtres);
+
+        $sorties = $sortieRepository->findAll();
+        $sortie = $sortieRepository->find($id);
+
+        $user=$this->tokenStorage->getToken()->getUser();
+        if (!empty($user)){
+            $userID = $user->getId();
+        }
+
+        $participant = $participantRepository->find($userID);
+        $sortie->removeParticipantsInscrit($participant);
+
+        $entityManager->persist($sortie);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Vous êtes bien désinscrit à l\'activité '.$sortie->getNom());
+
+        return $this->renderForm('sortie/index.html.twig', [
+
+            'sorties' => $sorties,
+            'formSorties' => $form
+        ]);
+
+    }
+
+    #[Route('/sortie/creation', name: 'creation_sortie')]
+    public function creation(Request $request)
+    {
+        $sortie = new Sortie();
+        $form = $this->createForm(SortieType::class, $sortie);
+
+        $form->handleRequest($request);
+
+        return $this->render('sortie/creation.html.twig',[
+            'formCreation' => $form,
+        ]);
+    }
 }

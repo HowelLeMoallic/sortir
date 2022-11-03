@@ -42,12 +42,6 @@
 
     </div>
 
-
-
-
-
-
-
     {# Afficher la liste des sorties #}
     <table class="tableau">
         <thead>
@@ -91,7 +85,7 @@
                             {% else %}
                                 {% if sortie.participantsInscrits.contains(app.user) %}
                                     <span> - </span>
-                                    <a href="">Se désister</a>
+                                    <a href="{{ path('desinscription_participant', {'id': sortie.id}) }}">Se désister</a>
                                 {% else %}
                                     <span> - </span>
                                     <a href="{{ path('inscription_participant', {'id': sortie.id}) }}">S'incrire</a>
@@ -116,7 +110,7 @@
 
     <div>
         <button>
-            <a href="">Créer une sortie</a>
+            <a href="{{ path('creation_sortie') }}">Créer une sortie</a>
         </button>
     </div>
 

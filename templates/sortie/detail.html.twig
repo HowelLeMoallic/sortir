@@ -3,4 +3,20 @@
 {% block body %}
     <h1>Afficher une sortie </h1>
     {{ form(formDetail) }}
+    <table>
+        <thead>
+        <tr>
+            <td>Pseudo</td>
+            <td>Nom</td>
+        </tr>
+        </thead>
+        <tbody>
+            {% for participant in participants %}
+                <tr>
+                    <td>{{ participant.pseudo }}</td>
+                    <td>{{ participant.nom }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
