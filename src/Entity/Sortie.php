@@ -56,7 +56,6 @@ class Sortie
     public function __construct()
     {
         $this->participantsInscrits = new ArrayCollection();
-        $this->etat->setLibelle('En création');
     }
 
     public function getId(): ?int
@@ -158,6 +157,14 @@ class Sortie
         $this->etat = $etat;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setEtatValue():void
+    {
+        if($this->getEtat() == null){
+            //$this->setEtat();
+        }
     }
 
     public function getCampus(): ?Campus

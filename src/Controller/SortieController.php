@@ -4,13 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Sortie;
 use App\Entity\Ville;
+use App\Form\CreationSortieType;
 use App\Form\FiltresSortiesType;
 use App\Form\Model\FiltresSortiesFormModel;
 
 
-use App\Form\SortieType;
+use App\Form\InfoSortieType;
+use App\Repository\EtatRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
+use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,7 +67,7 @@ class SortieController extends AbstractController
     public function detailSortie(int $id, SortieRepository $sortieRepository){
 
         $event = $sortieRepository->find($id);
-        $form = $this->createForm(SortieType::class, $event);
+        $form = $this->createForm(InfoSortieType::class, $event);
 
         $participants = $event->getParticipantsInscrits();
 
@@ -121,15 +124,46 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sortie/creation', name: 'creation_sortie')]
-    public function creation(Request $request)
+    public function creation(Request $request, EntityManagerInterface $entityManager, VilleRepository $villeRepository, EtatRepository $etatRepository)
     {
+        //Création d'un objet sortie
         $sortie = new Sortie();
-        $form = $this->createForm(SortieType::class, $sortie);
+        //Récupéré l'utilisateur en cours
+        $user = $this->tokenStorage->getToken()->getUser();
+        //Modifie l'utilisateur
+        $sortie->setOrganisateur($user);
 
+
+        //Requête pour récupérer les villes et les envoyés au twig
+        $villes = $villeRepository->findAll();
+
+        $form = $this->createForm(CreationSortieType::class, $sortie);
         $form->handleRequest($request);
 
+        if($form->isSubmitted() && $form->isValid()){
+
+            //En fonction du bouton clické
+            if($form->get('Publier')->isClicked()){
+                //Recherche l'état en fonction de son libelle
+                $etat = $etatRepository->findOneBy(['libelle' => 'Ouvert']);
+                $this->addFlash('success','Votre saisie a bien été publiée');
+            }
+            else{
+                //Recherche l'état en fonction de son libelle
+                $etat = $etatRepository->findOneBy(['libelle' => 'En création']);
+                $this->addFlash('success','Votre saisie a bien été enregistrée');
+            }
+            //Modifie l'état
+            $sortie->setEtat($etat);
+
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+        }
+
         return $this->render('sortie/creation.html.twig',[
-            'formCreation' => $form,
+            'formCreation' => $form->createView(),
+            'villes' => $villes,
         ]);
     }
 }

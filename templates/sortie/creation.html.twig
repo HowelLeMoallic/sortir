@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    Création d'une sortie
+{% endblock %}
+
+{% block body %}
+    {{ form_start(formCreation) }}
+        <div>
+            {{ form_row(formCreation.nom) }}
+            {{ form_row(formCreation.dateHeureDebut) }}
+            {{ form_row(formCreation.dateLimiteInscription) }}
+            {{ form_row(formCreation.nbInscriptionMax) }}
+            {{ form_row(formCreation.duree) }}
+            {{ form_row(formCreation.infosSortie) }}
+        </div>
+        <div>
+            {{ form_row(formCreation.campus) }}
+            <select name="villes" id="villes">
+                {% for ville in villes %}
+                    <option value="ville">{{ ville.nom }}</option>
+                {% endfor %}
+            </select>
+            <div id="lieu">
+                {{ form_row(formCreation.lieu) }}
+                <input type="checkbox">
+            </div>
+        </div>
+
+    {{ form_end(formCreation) }}
+{% endblock %}
+
+
+
