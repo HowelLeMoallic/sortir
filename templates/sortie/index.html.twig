@@ -94,7 +94,7 @@
                                     <a href="">Se désister</a>
                                 {% else %}
                                     <span> - </span>
-                                    <a href="">S'incrire</a>
+                                    <a href="{{ path('inscription_participant', {'id': sortie.id}) }}">S'incrire</a>
                                 {% endif %}
                             {% endif %}
                         {% endif %}

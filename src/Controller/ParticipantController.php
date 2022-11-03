@@ -43,4 +43,5 @@ class ParticipantController extends AbstractController
         ]);
 
     }
+
 }
