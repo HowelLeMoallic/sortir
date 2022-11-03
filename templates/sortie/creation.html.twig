@@ -15,6 +15,7 @@
         </div>
         <div>
             {{ form_row(formCreation.campus) }}
+            <label for="villes">Ville</label>
             <select name="villes" id="villes">
                 {% for ville in villes %}
                     <option value="ville">{{ ville.nom }}</option>
@@ -22,7 +23,7 @@
             </select>
             <div id="lieu">
                 {{ form_row(formCreation.lieu) }}
-                <input type="checkbox">
+                <a href="{{ path('creation_lieu') }}">+</a>
             </div>
         </div>
 

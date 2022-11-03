@@ -2,15 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Etat;
 use App\Entity\Sortie;
-use App\Entity\Ville;
+use App\Form\AnnulerSortieType;
+use App\Form\CreationSortieType;
 use App\Form\FiltresSortiesType;
 use App\Form\InfoSortieType;
 use App\Form\Model\FiltresSortiesFormModel;
 
-
-use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
@@ -21,7 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-
 
 
 class SortieController extends AbstractController
@@ -86,6 +83,7 @@ class SortieController extends AbstractController
 
         //Requête pour récupérer qu'une sortie en fonction de son id
         $sortie = $sortieRepository->find($id);
+        //Verif date limite d'inscription $$ nb Inscrit
         if($sortie->getDateLimiteInscription() > new \DateTime() && $sortie->getParticipantsInscrits()->count() < $sortie->getNbInscriptionMax()){
 
             //Récupére l'utilisateur connecter avec sécurité
@@ -115,13 +113,16 @@ class SortieController extends AbstractController
     {
 
         $sortie = $sortieRepository->find($id);
+        //Verif date limite inscription
         if($sortie->getDateLimiteInscription() > new \DateTime()){
             $user=$this->tokenStorage->getToken()->getUser();
+
             if (!empty($user)){
                 $userID = $user->getId();
             }
 
             $participant = $participantRepository->find($userID);
+            //Supprime le participant de la liste de participants à la sortie
             $sortie->removeParticipantsInscrit($participant);
 
             $entityManager->persist($sortie);
@@ -191,9 +192,6 @@ class SortieController extends AbstractController
         $formMotif = $this->createForm(AnnulerSortieType::class, $sortie);
 
         $formMotif->handleRequest($request);
-
-
-
 
         if ($formMotif->isSubmitted() && $formMotif->isValid()) {
             $sortie->setInfosSortie($description . ' ANNULEE ' . $sortie->getInfosSortie());
