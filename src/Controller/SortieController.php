@@ -5,8 +5,6 @@ namespace App\Controller;
 use App\Entity\Etat;
 use App\Entity\Sortie;
 use App\Entity\Ville;
-use App\Form\AnnulerSortieType;
-use App\Form\CreationSortieType;
 use App\Form\FiltresSortiesType;
 use App\Form\InfoSortieType;
 use App\Form\Model\FiltresSortiesFormModel;
@@ -84,6 +82,7 @@ class SortieController extends AbstractController
     public function inscription(int $id, SortieRepository $sortieRepository, ParticipantRepository $participantRepository,
                                     EntityManagerInterface $entityManager)
     {
+
 
         //Requête pour récupérer qu'une sortie en fonction de son id
         $sortie = $sortieRepository->find($id);

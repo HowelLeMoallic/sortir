@@ -48,4 +48,17 @@ class ParticipantController extends AbstractController
 
     }
 
+    #[Route('/profilOrganisateur/{id}', name: 'profil_organisateur', requirements: ['id' => '\d+'])]
+    public function profilOrganisateur(int $id, ParticipantRepository $participantRepository): Response
+    {
+        $user = $participantRepository->find($id);
+
+
+        return $this->render('sortie/profilOrganisateur.html.twig',[
+            'organisateur' => $user,
+
+        ]);
+
+    }
+
 }

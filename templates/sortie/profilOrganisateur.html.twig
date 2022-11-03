@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Profil {{ organisateur.pseudo }}{% endblock %}
+
+{% block body %}
+
+    <div class="centrer">
+        <h1>{{ organisateur.pseudo }}</h1>
+        <div class="form-annuler-sortie">
+            <section class="section-champ">
+                <div>Prénom</div>
+                <div>{{ organisateur.prenom }}</div>
+            </section>
+            <section class="section-champ">
+                <div>Nom</div>
+                <div>{{ organisateur.nom }}</div>
+            </section>
+            <section class="section-champ">
+                <div>Téléphone</div>
+                <div>{{ organisateur.telephone }}</div>
+            </section>
+            <section class="section-champ">
+                <div>Email</div>
+                <div>{{ organisateur.mail }}</div>
+            </section>
+
+
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
