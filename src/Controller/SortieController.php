@@ -7,8 +7,7 @@ use App\Entity\Ville;
 use App\Form\FiltresSortiesType;
 use App\Form\Model\FiltresSortiesFormModel;
 
-use App\Form\Model\Test;
-use App\Form\Model\Truc;
+
 use App\Form\SortieType;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
@@ -37,8 +36,6 @@ class SortieController extends AbstractController
         $user = $this->getUser();
 
         $filtresSorties = new FiltresSortiesFormModel();
-//        $ville = new Truc();
-//        dd($ville);
 
         $form = $this->createForm(FiltresSortiesType::class, $filtresSorties);
 
@@ -46,7 +43,7 @@ class SortieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //dd($filtresSorties);
+
             $sorties = $sortieRepository->findSortiesByFiltres($filtresSorties, $user);
 
         }
