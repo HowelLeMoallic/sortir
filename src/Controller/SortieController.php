@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
+use App\Entity\Ville;
 use App\Form\FiltresSortiesType;
 use App\Form\Model\FiltresSortiesFormModel;
+
+use App\Form\Model\Test;
+use App\Form\Model\Truc;
 use App\Form\SortieType;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
@@ -14,6 +18,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
+
 
 class SortieController extends AbstractController
 {
@@ -28,13 +34,20 @@ class SortieController extends AbstractController
     #[Route('/sortie', name: 'accueil')]
     public function index(SortieRepository $sortieRepository, Request $request): Response
     {
-        $filtres = new FiltresSortiesFormModel();
-        $form = $this->createForm(FiltresSortiesType::class, $filtres);
+        $user = $this->getUser();
+
+        $filtresSorties = new FiltresSortiesFormModel();
+//        $ville = new Truc();
+//        dd($ville);
+
+        $form = $this->createForm(FiltresSortiesType::class, $filtresSorties);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $sorties = $sortieRepository->findSortiesByFiltres($filtres);
+            //dd($filtresSorties);
+            $sorties = $sortieRepository->findSortiesByFiltres($filtresSorties, $user);
 
         }
         else{
@@ -44,11 +57,13 @@ class SortieController extends AbstractController
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
-            'formSorties'=>$form->createView()
+            'formSorties' => $form->createView(),
+            'filtresSorties' => $filtresSorties,
+
         ]);
     }
 
-    #[Route('/sortie/detail/{id}', name: 'detail_event')]
+    #[Route('/sortie/detail/{id}', name: 'detail_event', requirements: ['id' => '\d+'])]
     public function detailSortie(int $id, SortieRepository $sortieRepository){
 
         $event = $sortieRepository->find($id);

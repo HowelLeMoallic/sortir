@@ -3,166 +3,165 @@
 namespace App\Form\Model;
 
 use App\Entity\Campus;
-use App\Entity\Participant;
-use phpDocumentor\Reflection\Types\Boolean;
-use Symfony\Component\Validator\Constraints\Date;
-use Symfony\Component\Validator\Constraints\DateTime;
+
 
 class FiltresSortiesFormModel
 {
 
-    public Campus $campus;
-    public String $recherche;
-    public DateTime $dateDebut;
-    public Date $dateFin;
-    public bool $organisateur;
-    public bool $inscrit;
-    public bool $nonInscrit;
-    public bool $sortiesPassees;
+    private ?Campus $campus  = null;
+    private ?string $recherche = null;
+    private ?\DateTimeInterface $dateDebut;
+    private ?\DateTimeInterface $dateFin;
+    private ?bool $organisateur;
+    private ?bool $inscrit;
+    private ?bool $nonInscrit ;
+    private ?bool $sortiesPassees;
 
     /**
-     * @return Campus
+     * @return Campus|null
      */
-    public function getCampus(): Campus
+    public function getCampus(): ?Campus
     {
         return $this->campus;
     }
 
     /**
-     * @param Campus $campus
+     * @param Campus|null $campus
      * @return FiltresSortiesFormModel
      */
-    public function setCampus(Campus $campus): FiltresSortiesFormModel
+    public function setCampus(?Campus $campus): FiltresSortiesFormModel
     {
         $this->campus = $campus;
         return $this;
     }
 
     /**
-     * @return String
+     * @return String|null
      */
-    public function getRecherche(): string
+    public function getRecherche(): ?string
     {
         return $this->recherche;
     }
 
     /**
-     * @param String $recherche
+     * @param String|null $recherche
      * @return FiltresSortiesFormModel
      */
-    public function setRecherche(string $recherche): FiltresSortiesFormModel
+    public function setRecherche(?string $recherche): FiltresSortiesFormModel
     {
         $this->recherche = $recherche;
         return $this;
     }
 
     /**
-     * @return DateTime
+     * @return \DateTimeInterface|null
      */
-    public function getDateDebut(): DateTime
+    public function getDateDebut(): ?\DateTimeInterface
     {
         return $this->dateDebut;
     }
 
     /**
-     * @param DateTime $dateDebut
+     * @param \DateTimeInterface|null $dateDebut
      * @return FiltresSortiesFormModel
      */
-    public function setDateDebut(DateTime $dateDebut): FiltresSortiesFormModel
+    public function setDateDebut(?\DateTimeInterface $dateDebut): FiltresSortiesFormModel
     {
         $this->dateDebut = $dateDebut;
         return $this;
     }
 
     /**
-     * @return Date
+     * @return \DateTimeInterface|null
      */
-    public function getDateFin(): Date
+    public function getDateFin(): ?\DateTimeInterface
     {
         return $this->dateFin;
     }
 
     /**
-     * @param Date $dateFin
+     * @param \DateTimeInterface|null $dateFin
      * @return FiltresSortiesFormModel
      */
-    public function setDateFin(Date $dateFin): FiltresSortiesFormModel
+    public function setDateFin(?\DateTimeInterface $dateFin): FiltresSortiesFormModel
     {
         $this->dateFin = $dateFin;
         return $this;
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function isOrganisateur(): bool
+    public function getOrganisateur(): ?bool
     {
         return $this->organisateur;
     }
 
     /**
-     * @param bool $organisateur
+     * @param bool|null $organisateur
      * @return FiltresSortiesFormModel
      */
-    public function setOrganisateur(bool $organisateur): FiltresSortiesFormModel
+    public function setOrganisateur(?bool $organisateur): FiltresSortiesFormModel
     {
         $this->organisateur = $organisateur;
         return $this;
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function isInscrit(): bool
+    public function getInscrit(): ?bool
     {
         return $this->inscrit;
     }
 
     /**
-     * @param bool $inscrit
+     * @param bool|null $inscrit
      * @return FiltresSortiesFormModel
      */
-    public function setInscrit(bool $inscrit): FiltresSortiesFormModel
+    public function setInscrit(?bool $inscrit): FiltresSortiesFormModel
     {
         $this->inscrit = $inscrit;
         return $this;
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function isNonInscrit(): bool
+    public function getNonInscrit(): ?bool
     {
         return $this->nonInscrit;
     }
 
     /**
-     * @param bool $nonInscrit
+     * @param bool|null $nonInscrit
      * @return FiltresSortiesFormModel
      */
-    public function setNonInscrit(bool $nonInscrit): FiltresSortiesFormModel
+    public function setNonInscrit(?bool $nonInscrit): FiltresSortiesFormModel
     {
         $this->nonInscrit = $nonInscrit;
         return $this;
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function isSortiesPassees(): bool
+    public function getSortiesPassees(): ?bool
     {
         return $this->sortiesPassees;
     }
 
     /**
-     * @param bool $sortiesPassées
+     * @param bool|null $sortiesPassees
      * @return FiltresSortiesFormModel
      */
-    public function setSortiesPassees(bool $sortiesPassees): FiltresSortiesFormModel
+    public function setSortiesPassees(?bool $sortiesPassees): FiltresSortiesFormModel
     {
         $this->sortiesPassees = $sortiesPassees;
         return $this;
     }
+
+
 
 
 

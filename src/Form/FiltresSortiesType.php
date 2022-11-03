@@ -9,7 +9,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -26,26 +28,26 @@ class FiltresSortiesType extends AbstractType
                         return $er->createQueryBuilder('s')->orderBy('s.nom', 'ASC');
                     },
                     'choice_label' => 'nom',
-                    'expanded' => false,
-                    'multiple' => false,
-                    'required' => false
+                    'required' => false,
                 ]
             )
-            ->add('recherche', TextType::class, [
+            ->add('recherche', SearchType::class, [
                 'label' => 'Le nom de la sortie contient :',
-                'required' => false
+                'required' => false,
+
             ])
             ->add('dateDebut', DateType::class, [
                 'label' => 'Entre',
                 'widget' => 'single_text',
-                'required' => false
+                'required' => false,
 
 
             ])
             ->add('dateFin', DateType::class, [
                 'label' => 'et',
                 'widget' => 'single_text',
-                'required' => false
+                'required' => false,
+
 
             ])
             ->add('organisateur', CheckboxType::class, [

@@ -42,29 +42,57 @@ class SortieRepository extends ServiceEntityRepository
         }
     }
 
-    public function findSortiesByFiltres(FiltresSortiesFormModel $filtres): array
+    public function findSortiesByFiltres(FiltresSortiesFormModel $filtres, UserInterface $user): array
     {
-        $qb = $this->createQueryBuilder('s');
-        $qb->addSelect('s');
+        $qb = $this->createQueryBuilder('sortie');
+        $qb->addSelect('sortie');
+
 
         if ($filtres->getCampus()) {
-            $qb->andWhere('s.campus = :campus')
-                ->setParameter('campus', $filtres->getCampus());
+            $qb->leftJoin('sortie.campus', 'campus')
+                ->addSelect('campus')
+                ->andWhere('campus.nom = :campus')
+                ->setParameter('campus', $filtres->getCampus()->getNom());
         }
 
         if ($filtres->getRecherche()) {
-            $qb->andWhere('s.nom like %:nom%')
-                ->setParameter('nom', $filtres->getRecherche());
+            $qb->andWhere('sortie.nom LIKE :nom')
+                ->setParameter('nom', '%'.$filtres->getRecherche().'%');
         }
 
         if ($filtres->getDateDebut()) {
-            $qb->andWhere('s.dateHeureDebut >= :debut')
+            $qb->andWhere('sortie.dateHeureDebut >= :debut')
                 ->setParameter('debut', $filtres->getDateDebut());
         }
 
         if ($filtres->getDateFin()) {
-            $qb->andWhere('s.dateHeureDebut <= :fin')
+            $qb->andWhere('sortie.dateLimiteInscription <= :fin')
                 ->setParameter('fin', $filtres->getDateFin());
+        }
+
+        if ($filtres->getOrganisateur()) {
+            $qb->andWhere('sortie.organisateur = :user')
+                ->setParameter('user', $user);
+
+        }
+
+        if ($filtres->getInscrit()) {
+            $qb->andWhere('sortie.participantsInscrits IN (:user)')
+                ->setParameter('user', $user);
+
+
+        }
+
+        if ($filtres->getNonInscrit()) {
+
+        }
+
+        if ($filtres->getSortiesPassees()) {
+            $qb->leftJoin('sortie.etat', 'etat')
+                ->addSelect('etat')
+                ->andWhere('etat.libelle = :terminer')
+                ->setParameter('terminer', 'Terminé');
+
         }
 
 
