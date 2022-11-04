@@ -141,6 +141,19 @@ table, th, td {
 
 }
 
+.flash {
+    padding: 1rem;
+    color: black;
+}
+
+.flash-success {
+    background-color: lightgreen;
+}
+
+.flash-error {
+    background-color: indianred;
+}
+
 
 
 

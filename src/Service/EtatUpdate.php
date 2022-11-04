@@ -8,15 +8,12 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class EtatUpdate
 {
-    public function CheckedDate(SortieRepository $sortieRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager):void
+    public function checkedDate(SortieRepository $sortieRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager):void
     {
         $sorties = $sortieRepository->findAll();
-        $etatHistorise = $etatRepository->findOneBy(['libelle' => 'Historisé']);
-        $etatFermer = $etatRepository->findOneBy(['libelle' => 'Fermé']);
-        $etatOuvert = $etatRepository->findOneBy(['libelle' => 'Ouvert']);
-        $etatTerminer = $etatRepository->findOneBy(['libelle' => 'Terminé']);
-        $etatEnCours = $etatRepository->findOneBy(['libelle' => 'En cours']);
-        $etatAnnuler = $etatRepository->findOneBy(['libelle' => 'Annulé']);
+        $etat = $etatRepository->findAll();
+        $etatAnnuler = in_array('Annule', $etat) ;
+
 
 
 
@@ -29,18 +26,18 @@ class EtatUpdate
 
 
             if ($sortie->getDateHeureDebut() < $dateUnMoisAvant) {
-                $sortie->setEtat($etatHistorise);
+                $sortie->setEtat();
             } elseif ($sortie->getEtat() != $etatAnnuler) {
                 if ($sortie->getDateHeureDebut() == $dateDuJour){
-                    $sortie->setEtat($etatEnCours);
+                    $sortie->setEtat();
                 }
                 elseif ($sortie->getDateHeureDebut() < $dateDuJour) {
-                    $sortie->setEtat($etatTerminer);
+                    $sortie->setEtat();
                 }
                 elseif ($sortie->getParticipantsInscrits()->count() == $sortie->getNbInscriptionMax() || $sortie->getDateLimiteInscription() < $dateDuJour) {
-                    $sortie->setEtat($etatFermer);
+                    $sortie->setEtat();
                 } elseif ($sortie->getParticipantsInscrits()->count() < $sortie->getNbInscriptionMax()) {
-                    $sortie->setEtat($etatOuvert);
+                    $sortie->setEtat();
                 }
             }
 

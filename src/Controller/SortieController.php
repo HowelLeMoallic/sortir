@@ -35,7 +35,7 @@ class SortieController extends AbstractController
     #[Route('/sortie', name: 'accueil')]
     public function index(SortieRepository $sortieRepository, Request $request, EtatUpdate $etatUpdate, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
     {
-        $etatUpdate->CheckedDate($sortieRepository, $etatRepository, $entityManager);
+        $etatUpdate->checkedDate($sortieRepository, $etatRepository, $entityManager);
 
         $user = $this->getUser();
 
@@ -168,13 +168,14 @@ class SortieController extends AbstractController
                 $sortie->setOrganisateur($user);
                 //Recherche l'état en fonction de son libelle
                 $etat = $etatRepository->findOneBy(['libelle' => 'Ouvert']);
-                $this->addFlash('success','Votre saisie a bien été publiée');
+
 
                 //Modifie l'état
                 $sortie->setEtat($etat);
 
                 $entityManager->persist($sortie);
                 $entityManager->flush();
+                $this->addFlash('success','Votre saisie a bien été publiée');
 
                 return $this->redirectToRoute('accueil');
             }
@@ -183,13 +184,13 @@ class SortieController extends AbstractController
                 $sortie->setOrganisateur($user);
                 //Recherche l'état en fonction de son libelle
                 $etat = $etatRepository->findOneBy(['libelle' => 'En création']);
-                $this->addFlash('success','Votre saisie a bien été enregistrée');
+
                 //Modifie l'état
                 $sortie->setEtat($etat);
 
                 $entityManager->persist($sortie);
                 $entityManager->flush();
-
+                $this->addFlash('success','Votre saisie a bien été enregistrée');
                 return $this->redirectToRoute('accueil');
             }
 
