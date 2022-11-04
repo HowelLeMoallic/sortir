@@ -16,6 +16,8 @@ class EtatUpdate
         $etatOuvert = $etatRepository->findOneBy(['libelle' => 'Ouvert']);
         $etatTerminer = $etatRepository->findOneBy(['libelle' => 'Terminé']);
         $etatEnCours = $etatRepository->findOneBy(['libelle' => 'En cours']);
+        $etatAnnuler = $etatRepository->findOneBy(['libelle' => 'Annulé']);
+
 
 
         $dateDuJour = new \DateTime('now');
@@ -26,19 +28,23 @@ class EtatUpdate
         foreach ($sorties as $sortie) {
 
 
-            if ($sortie->getDateHeureDebut() == $dateDuJour){
-                $sortie->setEtat($etatEnCours);
-            } elseif ($sortie->getDateHeureDebut() < $dateUnMoisAvant) {
-
+            if ($sortie->getDateHeureDebut() < $dateUnMoisAvant) {
                 $sortie->setEtat($etatHistorise);
-            } elseif ($sortie->getDateHeureDebut() < $dateDuJour) {
-                $sortie->setEtat($etatTerminer);
+            } elseif ($sortie->getEtat() != $etatAnnuler) {
+                if ($sortie->getDateHeureDebut() == $dateDuJour){
+                    $sortie->setEtat($etatEnCours);
+                }
+                elseif ($sortie->getDateHeureDebut() < $dateDuJour) {
+                    $sortie->setEtat($etatTerminer);
+                }
+                elseif ($sortie->getParticipantsInscrits()->count() == $sortie->getNbInscriptionMax() || $sortie->getDateLimiteInscription() < $dateDuJour) {
+                    $sortie->setEtat($etatFermer);
+                } elseif ($sortie->getParticipantsInscrits()->count() < $sortie->getNbInscriptionMax()) {
+                    $sortie->setEtat($etatOuvert);
+                }
             }
-            elseif ($sortie->getParticipantsInscrits()->count() == $sortie->getNbInscriptionMax() || $sortie->getDateLimiteInscription() < $dateDuJour) {
-                $sortie->setEtat($etatFermer);
-            } elseif ($sortie->getParticipantsInscrits()->count() < $sortie->getNbInscriptionMax()) {
-                $sortie->setEtat($etatOuvert);
-            }
+
+
 
 
         }

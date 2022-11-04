@@ -87,7 +87,7 @@
                     {% if sortie.etat.libelle != 'En création'%}
                         <a href="{{ path('detail_event', {'id': sortie.id}) }}">Afficher</a>
 
-                        {% if sortie.dateLimiteInscription > date("now") %}
+                        {% if sortie.dateLimiteInscription > date("now") and sortie.etat.libelle != 'Annulé'%}
                             {% if sortie.organisateur == app.user %}
                                 <span> - </span>
                                 <a href="{{ path('annuler_sortie', {'id': sortie.id}) }}">Annuler</a>
