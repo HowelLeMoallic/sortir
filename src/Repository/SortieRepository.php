@@ -55,35 +55,40 @@ class SortieRepository extends ServiceEntityRepository
                 ->leftJoin('sortie.etat', 'etat')
                 ->addSelect('etat')
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé');
+                ->setParameter('historise', 'Historisé')
+                ->orderBy('sorties.dateHeureDebut', 'ASC' );
         }elseif ($filtres->getRecherche()) {
             $qb->andWhere('sortie.nom LIKE :nom')
                 ->setParameter('nom', '%'.$filtres->getRecherche().'%')
                 ->leftJoin('sortie.etat', 'etat')
                 ->addSelect('etat')
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé');
+                ->setParameter('historise', 'Historisé')
+                ->orderBy('sorties.dateHeureDebut', 'ASC' );
         }elseif ($filtres->getDateDebut()) {
             $qb->andWhere('sortie.dateHeureDebut >= :debut')
                 ->setParameter('debut', $filtres->getDateDebut())
                 ->leftJoin('sortie.etat', 'etat')
                 ->addSelect('etat')
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé');
+                ->setParameter('historise', 'Historisé')
+                ->orderBy('sorties.dateHeureDebut', 'ASC' );
         }elseif ($filtres->getDateFin()) {
             $qb->andWhere('sortie.dateLimiteInscription <= :fin')
                 ->setParameter('fin', $filtres->getDateFin())
                 ->leftJoin('sortie.etat', 'etat')
                 ->addSelect('etat')
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé');
+                ->setParameter('historise', 'Historisé')
+                ->orderBy('sorties.dateHeureDebut', 'ASC' );
         }elseif ($filtres->getOrganisateur()) {
             $qb->andWhere('sortie.organisateur = :user')
                 ->setParameter('user', $user)
                 ->leftJoin('sortie.etat', 'etat')
                 ->addSelect('etat')
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé');
+                ->setParameter('historise', 'Historisé')
+                ->orderBy('sorties.dateHeureDebut', 'ASC' );
 
         }elseif ($filtres->getInscrit()) {
             $qb->andWhere(':user MEMBER OF sortie.participantsInscrits')
@@ -91,7 +96,8 @@ class SortieRepository extends ServiceEntityRepository
                 ->leftJoin('sortie.etat', 'etat')
                 ->addSelect('etat')
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé');
+                ->setParameter('historise', 'Historisé')
+                ->orderBy('sorties.dateHeureDebut', 'ASC' );
 
         }elseif ($filtres->getNonInscrit()) {
             $qb->andWhere(':user NOT MEMBER sortie.participantsInscrits')
@@ -99,12 +105,14 @@ class SortieRepository extends ServiceEntityRepository
                 ->leftJoin('sortie.etat', 'etat')
                 ->addSelect('etat')
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé');
+                ->setParameter('historise', 'Historisé')
+                ->orderBy('sorties.dateHeureDebut', 'ASC' );
         }elseif ($filtres->getSortiesPassees()) {
             $qb->leftJoin('sortie.etat', 'etat')
                 ->addSelect('etat')
                 ->andWhere('etat.libelle = :terminer')
-                ->setParameter('terminer', 'Terminé');
+                ->setParameter('terminer', 'Terminé')
+                ->orderBy('sorties.dateHeureDebut', 'ASC' );
 
         }else{
             return $this->findSortiesByEtat($user);
@@ -142,7 +150,8 @@ class SortieRepository extends ServiceEntityRepository
 
             $qb->orWhere($orModule)
                 ->setParameter('user', $user)
-                ->setParameter('enCreation', 'En création');
+                ->setParameter('enCreation', 'En création')
+                ->orderBy('sorties.dateHeureDebut', 'ASC' );
 
         return $qb->getQuery()->getResult();
 
