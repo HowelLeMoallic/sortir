@@ -13,6 +13,7 @@ class EtatUpdate
         $sorties = $sortieRepository->findAll();
         $etatHistorise = $etatRepository->findOneBy(['libelle' => 'Historisé']);
         $etatFermer = $etatRepository->findOneBy(['libelle' => 'Fermé']);
+        $etatOuvert = $etatRepository->findOneBy(['libelle' => 'Ouvert']);
 
         $dateDuJour = new \DateTime('now');
 
@@ -21,15 +22,18 @@ class EtatUpdate
 
         foreach ($sorties as $sortie) {
 
+
+
             if ($sortie->getDateHeureDebut() < $dateUnMoisAvant) {
 
                 $sortie->setEtat($etatHistorise);
             }
-            elseif ($sortie->getDateLimiteInscription() < $dateDuJour) {
-
+            elseif ($sortie->getParticipantsInscrits()->count() == $sortie->getNbInscriptionMax() || $sortie->getDateLimiteInscription() < $dateDuJour) {
                 $sortie->setEtat($etatFermer);
-
+            } elseif ($sortie->getParticipantsInscrits()->count() < $sortie->getNbInscriptionMax()) {
+                $sortie->setEtat($etatOuvert);
             }
+
 
         }
         $entityManager->flush();

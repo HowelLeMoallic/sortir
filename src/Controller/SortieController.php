@@ -68,13 +68,18 @@ class SortieController extends AbstractController
     public function detailSortie(int $id, SortieRepository $sortieRepository){
 
         $event = $sortieRepository->find($id);
-        $form = $this->createForm(InfoSortieType::class, $event);
+
+        $nbPlacesRestantes = $event->getNbInscriptionMax() - $event->getParticipantsInscrits()->count();
+
+
 
         $participants = $event->getParticipantsInscrits();
 
-        return $this->renderForm('sortie/detail.html.twig', [
-           'formDetail' => $form,
-            'participants' => $participants
+        return $this->render('sortie/detail.html.twig', [
+            'event' => $event,
+            'participants' => $participants,
+            'nbPlacesRestantes' => $nbPlacesRestantes,
+
         ]);
     }
 

@@ -92,10 +92,24 @@ table, th, td {
 
 .section-champ {
     display: flex;
-    justify-content: space-between;
+    grid-gap: 2rem;
 }
 
-.section-champ div {
+.section-champ-detail {
+    display: flex;
+    width: 25rem;
+    grid-gap: 2rem;
+}
+
+.section-champ div:first-child{
+    font-weight: bold;
+}
+
+.section-champ-detail div:first-child{
+    font-weight: bold;
+}
+
+.section-champ-detail div {
     width: 50%;
 }
 
@@ -113,6 +127,21 @@ table, th, td {
     align-items: center;
     grid-gap: 4rem;
 }
+
+.afficherDetailSortie {
+    display: flex;
+    grid-gap: 7rem;
+    width: 75%;
+}
+
+.divLaterale{
+    display: flex;
+    flex-direction: column;
+    grid-gap: 2rem;
+
+}
+
+
 
 
 /*form {*/

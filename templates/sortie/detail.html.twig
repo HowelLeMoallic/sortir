@@ -1,8 +1,89 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Afficher une sortie </h1>
-    {{ form(formDetail) }}
+
+    <div class="centrer">
+        <h1>Afficher une sortie </h1>
+
+        <div class="afficherDetailSortie">
+            <div class="divLaterale">
+                <section class="section-champ-detail">
+                    <div>Nom de la sortie :</div>
+                    <div>{{ event.nom }}</div>
+                </section>
+                <section class="section-champ-detail">
+                    <div>Date et heure de la sortie :</div>
+                    <div>{{ event.dateHeureDebut|date('d/m/Y H:i:s') }}</div>
+                </section>
+                <section class="section-champ-detail">
+                    <div>Date limite d'inscription :</div>
+                    <div>{{ event.dateLimiteInscription|date('d/m/Y') }}</div>
+                </section>
+                <section class="section-champ-detail">
+                    <div>Nombre de places restantes :</div>
+                    <div>{{ nbPlacesRestantes  }}</div>
+                </section>
+                <section class="section-champ-detail">
+                    <div>Durée :</div>
+                    <div>{{ event.duree }} minutes</div>
+                </section>
+                <section class="section-champ-detail">
+                    <div>Description et infos :</div>
+                    <div>{{ event.infosSortie }}</div>
+                </section>
+            </div>
+
+            <div class="divLaterale">
+                <section class="section-champ-detail">
+                    <div>Campus :</div>
+                    <div>{{ event.campus.nom }}</div>
+                </section>
+                <section class="section-champ-detail">
+                    <div>Lieu :</div>
+                    <div>{{ event.lieu.nom }}</div>
+                </section>
+                <section class="section-champ-detail">
+                    <div>Rue :</div>
+                    <div>{{ event.lieu.rue }}</div>
+                </section>
+                <section class="section-champ-detail">
+                    <div>Code postal :</div>
+                    <div>{{ event.lieu.ville.codePostal }} {{ event.lieu.ville.nom }}</div>
+                </section>
+                <section class="section-champ-detail">
+                    <div>Latitude :</div>
+                    <div>{{ event.lieu.latitude }}</div>
+                </section>
+                <section class="section-champ-detail">
+                    <div>Longitude :</div>
+                    <div>{{ event.lieu.longitude }}</div>
+                </section>
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <table>
         <thead>
         <tr>
