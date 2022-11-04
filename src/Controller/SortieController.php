@@ -13,6 +13,7 @@ use App\Repository\EtatRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SortieRepository;
 use App\Repository\VilleRepository;
+use App\Service\EtatUpdate;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,8 +33,10 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sortie', name: 'accueil')]
-    public function index(SortieRepository $sortieRepository, Request $request): Response
+    public function index(SortieRepository $sortieRepository, Request $request, EtatUpdate $etatUpdate, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
     {
+        $etatUpdate->CheckedDate($sortieRepository, $etatRepository, $entityManager);
+
         $user = $this->getUser();
 
         $filtresSorties = new FiltresSortiesFormModel();

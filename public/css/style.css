@@ -95,6 +95,18 @@ table, th, td {
     justify-content: space-between;
 }
 
+.section-champ div {
+    width: 50%;
+}
+
+.section-bouton {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 3rem;
+}
+
+
+
 .centrer {
     display: flex;
     flex-direction: column;

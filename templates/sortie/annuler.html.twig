@@ -27,11 +27,17 @@
                 {{ form_start(formMotif) }}
 
                 <section class="section-champ">
-                    {{ form_label(formMotif.infosSortie) }}
-                    {{ form_widget(formMotif.infosSortie) }}
+                    <div>
+                        {{ form_label(formMotif.infosSortie) }}
+                    </div>
+                    <div>
+                        {{ form_widget(formMotif.infosSortie) }}
+                    </div>
+
                 </section>
 
-                <section class="section-champ">
+                <section class="section-bouton">
+
                     {{ form_row(formMotif.submit) }}
                     <button>
                         <a href="{{ path('accueil') }}">Annuler</a>
