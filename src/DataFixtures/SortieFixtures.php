@@ -16,7 +16,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $piqueNique->setNom('Pique-nique');
         $piqueNique->setDateHeureDebut(new \DateTime('2022-11-03 09:39:40'));
         $piqueNique->setDateLimiteInscription(new \DateTime());
-        $piqueNique->setDuree(new \DateTime('05:00:00'));
+        $piqueNique->setDuree(300);
         $piqueNique->setCampus($this->getReference('quimper'));
         $piqueNique->setEtat($this->getReference('ouvert'));
         $piqueNique->setInfosSortie('pique Nique avec les étudiants');
@@ -29,7 +29,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $patinoire->setNom('Patinoire');
         $patinoire->setDateHeureDebut(new \DateTime('2022-11-08 09:39:40'));
         $patinoire->setDateLimiteInscription(new \DateTime('2022-11-03 09:39:40'));
-        $patinoire->setDuree(new \DateTime('03:00:00'));
+        $patinoire->setDuree(180);
         $patinoire->setCampus($this->getReference('rennes'));
         $patinoire->setEtat($this->getReference('fermer'));
         $patinoire->setInfosSortie('patinoire avec les étudiants');
@@ -42,7 +42,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $patinoire1->setNom('Patinoire1');
         $patinoire1->setDateHeureDebut(new \DateTime('2022-11-08 09:39:40'));
         $patinoire1->setDateLimiteInscription(new \DateTime('2022-11-03 09:39:40'));
-        $patinoire1->setDuree(new \DateTime('03:00:00'));
+        $patinoire1->setDuree(180);
         $patinoire1->setCampus($this->getReference('rennes'));
         $patinoire1->setEtat($this->getReference('ouvert'));
         $patinoire1->setInfosSortie('patinoire avec les étudiants');
@@ -55,7 +55,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $patinoire2->setNom('Patinoire2');
         $patinoire2->setDateHeureDebut(new \DateTime('2022-11-08 09:39:40'));
         $patinoire2->setDateLimiteInscription(new \DateTime('2022-11-03 09:39:40'));
-        $patinoire2->setDuree(new \DateTime('03:00:00'));
+        $patinoire2->setDuree(180);
         $patinoire2->setCampus($this->getReference('rennes'));
         $patinoire2->setEtat($this->getReference('enCreation'));
         $patinoire2->setInfosSortie('patinoire avec les étudiants');

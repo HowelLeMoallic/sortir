@@ -62,7 +62,7 @@
         {% for sortie in sorties %}
             <tr>
                 <td>{{ sortie.nom }}</td>
-                <td>{{ sortie.dateHeureDebut.format('d/m/y') }}</td>
+                <td>{{ sortie.dateHeureDebut.format('d/m/Y') }}</td>
                 <td>{{ sortie.dateLimiteInscription.format('d/m/Y') }}</td>
                 <td>{{ sortie.participantsInscrits.count }}/{{ sortie.nbInscriptionMax }}</td>
                 <td>{{ sortie.etat.libelle }}</td>
