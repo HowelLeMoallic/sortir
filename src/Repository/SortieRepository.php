@@ -47,56 +47,68 @@ class SortieRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('sortie');
         $qb->addSelect('sortie');
 
-
         if ($filtres->getCampus()) {
             $qb->leftJoin('sortie.campus', 'campus')
                 ->addSelect('campus')
                 ->andWhere('campus.nom = :campus')
-                ->setParameter('campus', $filtres->getCampus()->getNom());
-        }
-
-        if ($filtres->getRecherche()) {
+                ->setParameter('campus', $filtres->getCampus()->getNom())
+                ->leftJoin('sortie.etat', 'etat')
+                ->addSelect('etat')
+                ->andWhere('etat.libelle != :historise')
+                ->setParameter('historise', 'Historisé');
+        }elseif ($filtres->getRecherche()) {
             $qb->andWhere('sortie.nom LIKE :nom')
-                ->setParameter('nom', '%'.$filtres->getRecherche().'%');
-        }
-
-        if ($filtres->getDateDebut()) {
+                ->setParameter('nom', '%'.$filtres->getRecherche().'%')
+                ->leftJoin('sortie.etat', 'etat')
+                ->addSelect('etat')
+                ->andWhere('etat.libelle != :historise')
+                ->setParameter('historise', 'Historisé');
+        }elseif ($filtres->getDateDebut()) {
             $qb->andWhere('sortie.dateHeureDebut >= :debut')
-                ->setParameter('debut', $filtres->getDateDebut());
-        }
-
-        if ($filtres->getDateFin()) {
+                ->setParameter('debut', $filtres->getDateDebut())
+                ->leftJoin('sortie.etat', 'etat')
+                ->addSelect('etat')
+                ->andWhere('etat.libelle != :historise')
+                ->setParameter('historise', 'Historisé');
+        }elseif ($filtres->getDateFin()) {
             $qb->andWhere('sortie.dateLimiteInscription <= :fin')
-                ->setParameter('fin', $filtres->getDateFin());
-        }
-
-        if ($filtres->getOrganisateur()) {
+                ->setParameter('fin', $filtres->getDateFin())
+                ->leftJoin('sortie.etat', 'etat')
+                ->addSelect('etat')
+                ->andWhere('etat.libelle != :historise')
+                ->setParameter('historise', 'Historisé');
+        }elseif ($filtres->getOrganisateur()) {
             $qb->andWhere('sortie.organisateur = :user')
-                ->setParameter('user', $user);
+                ->setParameter('user', $user)
+                ->leftJoin('sortie.etat', 'etat')
+                ->addSelect('etat')
+                ->andWhere('etat.libelle != :historise')
+                ->setParameter('historise', 'Historisé');
 
-        }
-
-        if ($filtres->getInscrit()) {
+        }elseif ($filtres->getInscrit()) {
             $qb->andWhere(':user MEMBER OF sortie.participantsInscrits')
-                ->setParameter('user', $user);
+                ->setParameter('user', $user)
+                ->leftJoin('sortie.etat', 'etat')
+                ->addSelect('etat')
+                ->andWhere('etat.libelle != :historise')
+                ->setParameter('historise', 'Historisé');
 
-
-        }
-
-        if ($filtres->getNonInscrit()) {
+        }elseif ($filtres->getNonInscrit()) {
             $qb->andWhere(':user NOT MEMBER sortie.participantsInscrits')
-                ->setParameter('user', $user);
-        }
-
-        if ($filtres->getSortiesPassees()) {
+                ->setParameter('user', $user)
+                ->leftJoin('sortie.etat', 'etat')
+                ->addSelect('etat')
+                ->andWhere('etat.libelle != :historise')
+                ->setParameter('historise', 'Historisé');
+        }elseif ($filtres->getSortiesPassees()) {
             $qb->leftJoin('sortie.etat', 'etat')
                 ->addSelect('etat')
                 ->andWhere('etat.libelle = :terminer')
                 ->setParameter('terminer', 'Terminé');
 
+        }else{
+            return $this->findSortiesByEtat($user);
         }
-
-
         return $qb->getQuery()->getResult();
     }
 
@@ -124,7 +136,7 @@ class SortieRepository extends ServiceEntityRepository
 
 
             //Bidouillage pour ajouter (`organisateur_id` = $user.id AND `etat_id` = 'En création')
-            $orModule = $qb->expr()->orx();
+            $orModule = $qb->expr()->andX();
             $orModule->add($qb->expr()->eq('organisateur.pseudo', ':user'));
             $orModule->add($qb->expr()->eq('etat.libelle', ':enCreation'));
 
