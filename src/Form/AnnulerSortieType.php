@@ -22,7 +22,7 @@ class AnnulerSortieType extends AbstractType
             ])
             ->add('submit', SubmitType::class,[
                 'label' => 'Enregister',
-                ''
+
 
             ])
 
