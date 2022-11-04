@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(formSortie) }}
+        {{ form_widget(formSortie) }}
+        <input type="Submit" value="Supprimer" name="Supprimer">
+        <button>
+            <a href="{{ path('accueil') }}">Annuler</a>
+        </button>
+    {{ form_end(formSortie) }}
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

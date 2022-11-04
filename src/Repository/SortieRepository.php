@@ -99,6 +99,42 @@ class SortieRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findSortiesByEtat(UserInterface $user)
+    {
+
+        $qb = $this->createQueryBuilder('sorties');
+
+        //Création de la requête principal
+        $qb->addSelect('sorties')
+            ->leftJoin('sorties.etat', 'etat')
+            ->addSelect('etat')
+            ->orWhere('etat.libelle =:ouvert')
+            ->setParameter('ouvert', 'Ouvert')
+            ->orWhere('etat.libelle =:enCours')
+            ->setParameter('enCours', 'En cours')
+            ->orWhere('etat.libelle =:ferme')
+            ->setParameter('ferme', 'Fermé')
+            ->orWhere('etat.libelle =:termine')
+            ->setParameter('termine', 'Terminé')
+            ->orWhere('etat.libelle =:annule')
+            ->setParameter('annule', 'Annulé')
+            ->leftJoin('sorties.organisateur', 'organisateur')
+            ->addSelect('organisateur');
+
+
+            //Bidouillage pour ajouter (`organisateur_id` = $user.id AND `etat_id` = 'En création')
+            $orModule = $qb->expr()->orx();
+            $orModule->add($qb->expr()->eq('organisateur.pseudo', ':user'));
+            $orModule->add($qb->expr()->eq('etat.libelle', ':enCreation'));
+
+            $qb->orWhere($orModule)
+                ->setParameter('user', $user)
+                ->setParameter('enCreation', 'En création');
+
+        return $qb->getQuery()->getResult();
+
+    }
     
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects

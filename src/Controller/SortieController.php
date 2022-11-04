@@ -52,7 +52,7 @@ class SortieController extends AbstractController
 
         }
         else{
-            $sorties = $sortieRepository->findAll();
+            $sorties = $sortieRepository->findSortiesByEtat($user);
 
         }
 
@@ -148,9 +148,6 @@ class SortieController extends AbstractController
         $sortie = new Sortie();
         //Récupéré l'utilisateur en cours
         $user = $this->tokenStorage->getToken()->getUser();
-        //Modifie l'utilisateur
-        $sortie->setOrganisateur($user);
-
 
         //Requête pour récupérer les villes et les envoyés au twig
         $villes = $villeRepository->findAll();
@@ -162,20 +159,34 @@ class SortieController extends AbstractController
 
             //En fonction du bouton clické
             if($form->get('Publier')->isClicked()){
+                //Modifie l'utilisateur
+                $sortie->setOrganisateur($user);
                 //Recherche l'état en fonction de son libelle
                 $etat = $etatRepository->findOneBy(['libelle' => 'Ouvert']);
                 $this->addFlash('success','Votre saisie a bien été publiée');
+
+                //Modifie l'état
+                $sortie->setEtat($etat);
+
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('accueil');
             }
-            else{
+            else if($form->get('Enregistrer')->isClicked()){
+                //Modifie l'utilisateur
+                $sortie->setOrganisateur($user);
                 //Recherche l'état en fonction de son libelle
                 $etat = $etatRepository->findOneBy(['libelle' => 'En création']);
                 $this->addFlash('success','Votre saisie a bien été enregistrée');
-            }
-            //Modifie l'état
-            $sortie->setEtat($etat);
+                //Modifie l'état
+                $sortie->setEtat($etat);
 
-            $entityManager->persist($sortie);
-            $entityManager->flush();
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('accueil');
+            }
 
         }
 
@@ -183,6 +194,73 @@ class SortieController extends AbstractController
             'formCreation' => $form->createView(),
             'villes' => $villes,
         ]);
+    }
+
+    #[Route('/sortie/modification/{id}', name: 'modification_sortie')]
+    public function modifierSortie(SortieRepository $sortieRepository, int $id, Request $request, VilleRepository $villeRepository,
+                                    EtatRepository $etatRepository, EntityManagerInterface $entityManager)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $sortie = $sortieRepository->find($id);
+        $etat = $etatRepository->findOneBy(['libelle' => 'En création']);
+
+        //Requête pour récupérer les villes et les envoyés au twig
+        $villes = $villeRepository->findAll();
+
+        $formSortie = $this->createForm(CreationSortieType::class, $sortie);
+        $formSortie->handleRequest($request);
+
+        if($user === $sortie->getOrganisateur() && $etat === $sortie->getEtat() ){
+
+            if($formSortie->isSubmitted() && $formSortie->isValid()){
+
+                //En fonction du bouton clické
+                if($formSortie->get('Publier')->isClicked()){
+
+                    //Recherche l'état en fonction de son libelle
+                    $etat = $etatRepository->findOneBy(['libelle' => 'Ouvert']);
+
+                    //Modifie l'état
+                    $sortie->setEtat($etat);
+
+                    $entityManager->persist($sortie);
+                    $entityManager->flush();
+
+                    $this->addFlash('success','Votre saisie a bien été publiée');
+                    return $this->redirectToRoute('accueil');
+                } else if($formSortie->get('Enregistrer')->isClicked()){
+
+                    //Recherche l'état en fonction de son libelle
+                    $etat = $etatRepository->findOneBy(['libelle' => 'En création']);
+
+                    //Modifie l'état
+                    $sortie->setEtat($etat);
+
+                    $entityManager->persist($sortie);
+                    $entityManager->flush();
+
+                    $this->addFlash('success','Votre saisie a bien été enregistrée');
+                    return $this->redirectToRoute('accueil');
+                // if ($formSortie->get('Supprimer')->isClicked())
+                } else{
+
+                    $entityManager->remove($sortie);
+                    $entityManager->flush();
+
+                    $this->addFlash('success','Votre saisie a bien été supprimée');
+                    return $this->redirectToRoute('accueil');
+                }
+            }
+
+            return $this->render('sortie/modification.html.twig', [
+                'formSortie' => $formSortie->createView(),
+                'villes' => $villes
+            ]);
+
+        }else{
+            $this->addFlash('success','Vous ne pouvez pas modifier la sortie');
+            return $this->redirectToRoute('accueil');
+        }
     }
 
     #[Route('/sortie/annuler/{id}', name: 'annuler_sortie', requirements: ['id' => '\d+'])]
