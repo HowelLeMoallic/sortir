@@ -3,19 +3,15 @@
 namespace App\Service;
 
 use App\Repository\EtatRepository;
-use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class EtatUpdate
 {
-    public function checkedDate(SortieRepository $sortieRepository, EtatRepository $etatRepository, EntityManagerInterface $entityManager):void
+    public function checkedDate(EtatRepository $etatRepository, EntityManagerInterface $entityManager, $sorties):void
     {
-        $sorties = $sortieRepository->findAll();
-        $etat = $etatRepository->findAll();
-        $etatAnnuler = in_array('Annule', $etat) ;
 
-
-
+        $etats = $etatRepository->findAll();
+        $etatAnnuler = in_array('Annule', $etats) ;
 
         $dateDuJour = new \DateTime('now');
 
@@ -24,31 +20,44 @@ class EtatUpdate
 
         foreach ($sorties as $sortie) {
 
-
             if ($sortie->getDateHeureDebut() < $dateUnMoisAvant) {
-                $sortie->setEtat();
+                foreach($etats as $etat){
+                    if ($etat->getLibelle() == 'Historisé' ){
+                        $sortie->setEtat($etat);
+                    }
+                }
             } elseif ($sortie->getEtat() != $etatAnnuler) {
                 if ($sortie->getDateHeureDebut() == $dateDuJour){
-                    $sortie->setEtat();
+                    foreach($etats as $etat) {
+                        if ($etat->getLibelle() == 'En cours' ){
+                            $sortie->setEtat($etat);
+                        }
+                    }
                 }
                 elseif ($sortie->getDateHeureDebut() < $dateDuJour) {
-                    $sortie->setEtat();
+                    foreach ($etats as $etat) {
+                        if ($etat->getLibelle() == 'Terminé' ){
+                            $sortie->setEtat($etat);
+                        }
+                    }
                 }
                 elseif ($sortie->getParticipantsInscrits()->count() == $sortie->getNbInscriptionMax() || $sortie->getDateLimiteInscription() < $dateDuJour) {
-                    $sortie->setEtat();
+                    foreach ($etats as $etat) {
+                        if ($etat->getLibelle() == 'Fermé' ){
+                            $sortie->setEtat($etat);
+                        }
+                    }
                 } elseif ($sortie->getParticipantsInscrits()->count() < $sortie->getNbInscriptionMax()) {
-                    $sortie->setEtat();
+                    foreach ($etats as $etat) {
+                        if ($etat->getLibelle() == 'Ouvert' ){
+                            $sortie->setEtat($etat);
+                        }
+                    }
                 }
             }
 
-
-
-
         }
         $entityManager->flush();
-
-
-
 
     }
 

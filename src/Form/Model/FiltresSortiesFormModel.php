@@ -10,12 +10,12 @@ class FiltresSortiesFormModel
 
     private ?Campus $campus  = null;
     private ?string $recherche = null;
-    private ?\DateTimeInterface $dateDebut;
-    private ?\DateTimeInterface $dateFin;
-    private ?bool $organisateur;
-    private ?bool $inscrit;
-    private ?bool $nonInscrit ;
-    private ?bool $sortiesPassees;
+    private ?\DateTimeInterface $dateDebut = null;
+    private ?\DateTimeInterface $dateFin = null;
+    private ?bool $organisateur = null;
+    private ?bool $inscrit = null;
+    private ?bool $nonInscrit = null;
+    private ?bool $sortiesPassees = null;
 
     /**
      * @return Campus|null

@@ -6,7 +6,6 @@ use App\Entity\Sortie;
 use App\Form\Model\FiltresSortiesFormModel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -45,103 +44,64 @@ class SortieRepository extends ServiceEntityRepository
     public function findSortiesByFiltres(FiltresSortiesFormModel $filtres, UserInterface $user): array
     {
         $qb = $this->createQueryBuilder('sortie');
-        $qb->addSelect('sortie');
-
+        $qb->addSelect('sortie')
+            ->leftJoin('sortie.campus', 'campus')
+            ->addSelect('campus')
+            ->leftJoin('sortie.etat', 'etat')
+            ->addSelect('etat')
+            ->leftJoin('sortie.organisateur', 'organisateur')
+            ->addSelect('organisateur')
+            ->leftJoin('sortie.participantsInscrits', 'participantsInscrits')
+            ->addSelect('participantsInscrits')
+            ->orderBy('sortie.dateHeureDebut', 'ASC' );
         if ($filtres->getCampus()) {
-            $qb->leftJoin('sortie.campus', 'campus')
-                ->addSelect('campus')
+            $qb
                 ->andWhere('campus.nom = :campus')
                 ->setParameter('campus', $filtres->getCampus()->getNom())
-                ->leftJoin('sortie.etat', 'etat')
-                ->addSelect('etat')
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé')
-                ->orderBy('sorties.dateHeureDebut', 'ASC' );
+                ->setParameter('historise', 'Historisé');
         }elseif ($filtres->getRecherche()) {
             $qb->andWhere('sortie.nom LIKE :nom')
                 ->setParameter('nom', '%'.$filtres->getRecherche().'%')
-                ->leftJoin('sortie.etat', 'etat')
-                ->addSelect('etat')
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé')
-                ->orderBy('sorties.dateHeureDebut', 'ASC' );
+                ->setParameter('historise', 'Historisé');
         }elseif ($filtres->getDateDebut()) {
             $qb->andWhere('sortie.dateHeureDebut >= :debut')
                 ->setParameter('debut', $filtres->getDateDebut())
-                ->leftJoin('sortie.etat', 'etat')
-                ->addSelect('etat')
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé')
-                ->orderBy('sorties.dateHeureDebut', 'ASC' );
+                ->setParameter('historise', 'Historisé');
         }elseif ($filtres->getDateFin()) {
             $qb->andWhere('sortie.dateLimiteInscription <= :fin')
                 ->setParameter('fin', $filtres->getDateFin())
-                ->leftJoin('sortie.etat', 'etat')
-                ->addSelect('etat')
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé')
-                ->orderBy('sorties.dateHeureDebut', 'ASC' );
+                ->setParameter('historise', 'Historisé');
         }elseif ($filtres->getOrganisateur()) {
             $qb->andWhere('sortie.organisateur = :user')
                 ->setParameter('user', $user)
-                ->leftJoin('sortie.etat', 'etat')
-                ->addSelect('etat')
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé')
-                ->orderBy('sorties.dateHeureDebut', 'ASC' );
+                ->setParameter('historise', 'Historisé');
 
         }elseif ($filtres->getInscrit()) {
             $qb->andWhere(':user MEMBER OF sortie.participantsInscrits')
                 ->setParameter('user', $user)
-                ->leftJoin('sortie.etat', 'etat')
-                ->addSelect('etat')
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé')
-                ->orderBy('sorties.dateHeureDebut', 'ASC' );
+                ->setParameter('historise', 'Historisé');
 
         }elseif ($filtres->getNonInscrit()) {
             $qb->andWhere(':user NOT MEMBER sortie.participantsInscrits')
                 ->setParameter('user', $user)
-                ->leftJoin('sortie.etat', 'etat')
-                ->addSelect('etat')
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé')
-                ->orderBy('sorties.dateHeureDebut', 'ASC' );
+                ->setParameter('historise', 'Historisé');
+
         }elseif ($filtres->getSortiesPassees()) {
-            $qb->leftJoin('sortie.etat', 'etat')
-                ->addSelect('etat')
-                ->andWhere('etat.libelle = :terminer')
-                ->setParameter('terminer', 'Terminé')
-                ->orderBy('sorties.dateHeureDebut', 'ASC' );
-
+            $qb->andWhere('etat.libelle = :terminer')
+                ->setParameter('terminer', 'Terminé');
         }else{
-            return $this->findSortiesByEtat($user);
-        }
-        return $qb->getQuery()->getResult();
-    }
-
-    public function findSortiesByEtat(UserInterface $user)
-    {
-
-        $qb = $this->createQueryBuilder('sorties');
-
-        //Création de la requête principal
-        $qb->addSelect('sorties')
-            ->leftJoin('sorties.etat', 'etat')
-            ->addSelect('etat')
-            ->orWhere('etat.libelle =:ouvert')
-            ->setParameter('ouvert', 'Ouvert')
-            ->orWhere('etat.libelle =:enCours')
-            ->setParameter('enCours', 'En cours')
-            ->orWhere('etat.libelle =:ferme')
-            ->setParameter('ferme', 'Fermé')
-            ->orWhere('etat.libelle =:termine')
-            ->setParameter('termine', 'Terminé')
-            ->orWhere('etat.libelle =:annule')
-            ->setParameter('annule', 'Annulé')
-            ->leftJoin('sorties.organisateur', 'organisateur')
-            ->addSelect('organisateur');
-
+            //Implémentation de la requête principal
+            $qb->andWhere('etat.libelle != :historise')
+                ->setParameter('historise', 'Historisé')
+                ->andWhere('etat.libelle != :enCreation')
+                ->setParameter('enCreation', 'En création');
 
             //Bidouillage pour ajouter (`organisateur_id` = $user.id AND `etat_id` = 'En création')
             $orModule = $qb->expr()->andX();
@@ -150,11 +110,9 @@ class SortieRepository extends ServiceEntityRepository
 
             $qb->orWhere($orModule)
                 ->setParameter('user', $user)
-                ->setParameter('enCreation', 'En création')
-                ->orderBy('sorties.dateHeureDebut', 'ASC' );
-
+                ->setParameter('enCreation', 'En création');
+        }
         return $qb->getQuery()->getResult();
-
     }
     
 //    /**

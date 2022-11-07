@@ -35,8 +35,6 @@ class SortieController extends AbstractController
     #[Route('/sortie', name: 'accueil')]
     public function index(SortieRepository $sortieRepository, Request $request, EtatUpdate $etatUpdate, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
     {
-        $etatUpdate->checkedDate($sortieRepository, $etatRepository, $entityManager);
-
         $user = $this->getUser();
 
         $filtresSorties = new FiltresSortiesFormModel();
@@ -45,16 +43,9 @@ class SortieController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $sorties = $sortieRepository->findSortiesByFiltres($filtresSorties, $user);
 
-
-            $sorties = $sortieRepository->findSortiesByFiltres($filtresSorties, $user);
-
-        }
-        else{
-            $sorties = $sortieRepository->findSortiesByEtat($user);
-
-        }
+        $etatUpdate->CheckedDate($sortieRepository, $etatRepository, $entityManager, $sorties);
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
@@ -161,37 +152,39 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+            if($sortie->getDateHeureDebut() >= $sortie->getDateLimiteInscription()){
+                //En fonction du bouton clické
+                if($form->get('Publier')->isClicked()){
+                    //Modifie l'utilisateur
+                    $sortie->setOrganisateur($user);
+                    //Recherche l'état en fonction de son libelle
+                    $etat = $etatRepository->findOneBy(['libelle' => 'Ouvert']);
+                    $this->addFlash('success','Votre saisie a bien été publiée');
 
-            //En fonction du bouton clické
-            if($form->get('Publier')->isClicked()){
-                //Modifie l'utilisateur
-                $sortie->setOrganisateur($user);
-                //Recherche l'état en fonction de son libelle
-                $etat = $etatRepository->findOneBy(['libelle' => 'Ouvert']);
+                    //Modifie l'état
+                    $sortie->setEtat($etat);
 
+                    $entityManager->persist($sortie);
+                    $entityManager->flush();
 
-                //Modifie l'état
-                $sortie->setEtat($etat);
+                    return $this->redirectToRoute('accueil');
+                }
+                else if($form->get('Enregistrer')->isClicked()){
+                    //Modifie l'utilisateur
+                    $sortie->setOrganisateur($user);
+                    //Recherche l'état en fonction de son libelle
+                    $etat = $etatRepository->findOneBy(['libelle' => 'En création']);
+                    $this->addFlash('success','Votre saisie a bien été enregistrée');
+                    //Modifie l'état
+                    $sortie->setEtat($etat);
 
-                $entityManager->persist($sortie);
-                $entityManager->flush();
-                $this->addFlash('success','Votre saisie a bien été publiée');
+                    $entityManager->persist($sortie);
+                    $entityManager->flush();
 
-                return $this->redirectToRoute('accueil');
-            }
-            else if($form->get('Enregistrer')->isClicked()){
-                //Modifie l'utilisateur
-                $sortie->setOrganisateur($user);
-                //Recherche l'état en fonction de son libelle
-                $etat = $etatRepository->findOneBy(['libelle' => 'En création']);
-
-                //Modifie l'état
-                $sortie->setEtat($etat);
-
-                $entityManager->persist($sortie);
-                $entityManager->flush();
-                $this->addFlash('success','Votre saisie a bien été enregistrée');
-                return $this->redirectToRoute('accueil');
+                    return $this->redirectToRoute('accueil');
+                }
+            }else{
+                $this->addFlash('error', 'La date de début de sortie doit être supérieure à la date de limite d\'inscription');
             }
 
         }
@@ -284,7 +277,6 @@ class SortieController extends AbstractController
             $sortie->setInfosSortie($description . ' ANNULEE ' . $sortie->getInfosSortie());
             $etat = $etatRepository->findOneBy(['libelle' => 'Annulé']);
             $sortie->setEtat($etat);
-
 
             $entityManager->persist($sortie);
             $entityManager->flush();
