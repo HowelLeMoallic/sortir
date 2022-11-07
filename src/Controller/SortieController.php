@@ -45,7 +45,7 @@ class SortieController extends AbstractController
 
         $sorties = $sortieRepository->findSortiesByFiltres($filtresSorties, $user);
 
-        $etatUpdate->CheckedDate($sortieRepository, $etatRepository, $entityManager, $sorties);
+        $etatUpdate->CheckedDate($etatRepository, $entityManager, $sorties);
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
