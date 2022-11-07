@@ -3,14 +3,24 @@
 namespace App\Form\Model;
 
 use App\Entity\Campus;
+use App\Entity\Sortie;
+use phpDocumentor\Reflection\Types\This;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 class FiltresSortiesFormModel
 {
 
+//    #[Assert\Choice(choices: [Campus::class, 'getNom'])]
     private ?Campus $campus  = null;
+
     private ?string $recherche = null;
+
+    #[Assert\GreaterThanOrEqual('today')]
     private ?\DateTimeInterface $dateDebut = null;
+
+
+    #[Assert\GreaterThan(propertyPath: "dateDebut", message: 'La date de fin doit être supérieur à la date de début')]
     private ?\DateTimeInterface $dateFin = null;
     private ?bool $organisateur = null;
     private ?bool $inscrit = null;
