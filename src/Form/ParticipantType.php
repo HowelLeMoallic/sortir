@@ -7,9 +7,11 @@ use App\Entity\Participant;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -24,20 +26,30 @@ class ParticipantType extends AbstractType
     {
         $builder
 
-            ->add('pseudo')
-            ->add('nom')
-            ->add('prenom')
-            ->add('telephone')
-            ->add('mail')
+            ->add('pseudo', TextType::class,[
+                'label' => 'Pseudo :'
+            ])
+            ->add('nom', TextType::class,[
+                'label' => 'Nom :'
+            ])
+            ->add('prenom', TextType::class,[
+                'label' => 'Prénom :'
+            ])
+            ->add('telephone', TextType::class,[
+                'label' => 'Téléphone :'
+            ])
+            ->add('mail', EmailType::class,[
+                'label' => 'Email :'
+            ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Le mot de passe ne correspond pas à sa confirmation.',
                 'first_options' => [
-                    'label' => 'Mot de passe',
-                    'help' => 'Le mot de passe doit contenir au minimum 8 caractères dont une minuscule, une majuscule, un chiffre et un caractère spécial.',
+                    'label' => 'Mot de passe :',
+                   // 'help' => 'Le mot de passe doit contenir au minimum 8 caractères dont une minuscule, une majuscule, un chiffre et un caractère spécial.',
                 ],
                 'second_options' => [
-                    'label' => 'Confirmation du mot de passe.',
+                    'label' => 'Confirmation du mot de passe :',
                 ],
                 'mapped' => false,
                 'required' => false,
@@ -49,6 +61,8 @@ class ParticipantType extends AbstractType
             ])
             ->add('campus', EntityType::class, [
                 'class' =>Campus::class,
+                    'label' => 'Campus :',
+
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('s')->orderBy('s.nom', 'ASC');
                 },
@@ -58,7 +72,7 @@ class ParticipantType extends AbstractType
                 ]
             )
 //            ->add('photo', )
-            ->add('submit', SubmitType::class)
+            ->add('Enregister', SubmitType::class, )
         ;
     }
 
