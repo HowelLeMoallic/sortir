@@ -55,7 +55,6 @@ class EtatUpdate
                 }
             }
 
-
             $entityManager->flush();
 
         }

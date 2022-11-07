@@ -51,6 +51,9 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Sortie::class, inversedBy: 'participantsInscrits')]
     private Collection $inscritSorties;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $photo = null;
+
     public function __construct()
     {
         $this->orgaSortie = new ArrayCollection();
@@ -256,6 +259,18 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeInscritSorty(Sortie $inscritSorty): self
     {
         $this->inscritSorties->removeElement($inscritSorty);
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): self
+    {
+        $this->photo = $photo;
 
         return $this;
     }

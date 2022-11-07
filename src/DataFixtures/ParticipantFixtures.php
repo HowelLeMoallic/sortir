@@ -35,6 +35,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $howel->setTelephone('0101010101');
         $howel->setMail('howel.lemoallic2022@campus-eni.fr');
         $howel->setCampus($this->getReference('rennes'));
+        $howel->setPhoto('user.jpg');
         $this->addReference('howel', $howel);
         $manager->persist($howel);
 

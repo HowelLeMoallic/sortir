@@ -6,7 +6,9 @@
 
     <div class="centrer">
         <h1>Mon Profil</h1>
-
+        {% if participant.photo is not null %}
+            <img src="{{ asset('images/' ~ participant.photo) }}" alt="{{ participant.pseudo }}">
+        {% endif %}
         <div class="form-profil">
             {{ form_start(formProfil) }}
             {{ form_row(formProfil.pseudo) }}
