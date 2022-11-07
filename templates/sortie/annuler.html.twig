@@ -23,7 +23,7 @@
                 <div>{{ sortie.lieu.nom }} {{ sortie.lieu.rue }} {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</div>
             </section>
 
-            <form action="{{ path('annuler_sortie', {'id': sortie.id}) }}" method="post" id="motif">
+            <form action="{{ path('annuler_sortie', {'id': sortie.id}) }}" method="post" id="motif" class="form-annuler-sortie-bouton">
                 {{ form_start(formMotif) }}
 
                 <section class="section-champ">

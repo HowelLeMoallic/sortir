@@ -85,28 +85,35 @@ table, th, td {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    width: 50%;
+
     grid-gap: 3rem;
 
 }
 
+.form-annuler-sortie-bouton {
+    width: 100%;
+}
+
 .section-champ {
     display: flex;
+
     grid-gap: 2rem;
 }
 
 .section-champ-detail {
     display: flex;
-    width: 25rem;
+
     grid-gap: 2rem;
 }
 
 .section-champ div:first-child{
     font-weight: bold;
+    width: 12rem;
 }
 
 .section-champ-detail div:first-child{
     font-weight: bold;
+    width: 12rem;
 }
 
 .section-champ-detail div {
@@ -140,6 +147,49 @@ table, th, td {
     grid-gap: 2rem;
 
 }
+
+.form-profil form{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    grid-gap: 2rem;
+}
+
+.form-profil form div{
+    display: flex;
+    grid-gap: 2rem;
+}
+
+.form-profil form div label {
+    width: 15rem;
+    font-weight: bold;
+
+}
+
+.form-profil form div input {
+    width: 20rem;
+
+}
+
+.form-profil form div:last-of-type {
+    display: flex;
+    justify-content: center;
+
+}
+
+.form-profil form div:last-of-type button {
+    width: 7rem;
+}
+
+
+
+
+
+
+
+
+
+
 
 .flash {
     padding: 1rem;

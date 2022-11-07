@@ -7,14 +7,17 @@
     <div class="centrer">
         <h1>Mon Profil</h1>
 
-        {{ form_start(formProfil) }}
+        <div class="form-profil">
+            {{ form_start(formProfil) }}
             {{ form_row(formProfil.pseudo) }}
             {{ form_row(formProfil.prenom) }}
             {{ form_row(formProfil.nom) }}
             {{ form_row(formProfil.telephone) }}
             {{ form_row(formProfil.mail) }}
             {{ form_row(formProfil.campus) }}
-        {{ form_end(formProfil) }}
+            {{ form_end(formProfil) }}
+        </div>
+
 
     </div>
 

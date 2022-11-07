@@ -54,7 +54,7 @@ class ParticipantController extends AbstractController
         $user = $participantRepository->find($id);
 
 
-        return $this->render('sortie/profilOrganisateur.html.twig',[
+        return $this->render('participant/profilOrganisateur.html.twig',[
             'organisateur' => $user,
 
         ]);
