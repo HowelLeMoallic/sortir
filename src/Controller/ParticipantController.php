@@ -31,7 +31,9 @@ class ParticipantController extends AbstractController
             /** @var UploadedFile $brochureFile */
             $imageProfil = $form->get('image')->getData();
             if ($imageProfil) {
-                $image = $imageUpload->upload($imageProfil);
+
+                //dd($user);
+                $image = $imageUpload->upload($imageProfil, $user);
                 $user->setPhoto($image);
             }
 

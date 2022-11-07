@@ -89,8 +89,8 @@ class ParticipantType extends AbstractType
                     new File([
                         'maxSize' => '2024k',
                         'mimeTypes' => [
-                            //'application/png',
-                            //'application/jpg',
+                            'image/png',
+                            'image/jpeg',
                         ],
                         'mimeTypesMessage' => 'Un format jpg ou png est attendu',
                     ])
