@@ -53,7 +53,7 @@ class SortieRepository extends ServiceEntityRepository
             ->addSelect('organisateur')
             ->leftJoin('sortie.participantsInscrits', 'participantsInscrits')
             ->addSelect('participantsInscrits')
-            ->orderBy('sortie.dateHeureDebut', 'ASC' );
+            ->orderBy('sortie.dateHeureDebut', 'ASC');
         if ($filtres->getCampus()) {
             $qb->andWhere('campus.nom = :campus')
                 ->setParameter('campus', $filtres->getCampus()->getNom())
@@ -85,13 +85,17 @@ class SortieRepository extends ServiceEntityRepository
             $qb->andWhere(':user MEMBER OF sortie.participantsInscrits')
                 ->setParameter('user', $user)
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé');
+                ->setParameter('historise', 'Historisé')
+                ->andWhere('etat.libelle != :enCreation')
+                ->setParameter('enCreation', 'En création');
 
         }elseif ($filtres->getNonInscrit()) {
             $qb->andWhere(':user NOT MEMBER sortie.participantsInscrits')
                 ->setParameter('user', $user)
                 ->andWhere('etat.libelle != :historise')
-                ->setParameter('historise', 'Historisé');
+                ->setParameter('historise', 'Historisé')
+                ->andWhere('etat.libelle != :enCreation')
+                ->setParameter('enCreation', 'En création');
 
         }elseif ($filtres->getSortiesPassees()) {
             $qb->andWhere('etat.libelle = :terminer')
@@ -109,7 +113,7 @@ class SortieRepository extends ServiceEntityRepository
             $orModule->add($qb->expr()->eq('etat.libelle', ':enCreation'));
 
             $qb->orWhere($orModule)
-                ->setParameter('user', $user)
+                ->setParameter('user', $user->getPseudo())
                 ->setParameter('enCreation', 'En création');
         }
         return $qb->getQuery()->getResult();

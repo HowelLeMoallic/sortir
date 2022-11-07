@@ -39,16 +39,25 @@ class SortieController extends AbstractController
 
         $filtresSorties = new FiltresSortiesFormModel();
         //Problème de requête en plus
-        //$filtresSorties->setCampus($user->getCampus());
+        $filtresSorties->setCampus($user->getCampus());
 
         $form = $this->createForm(FiltresSortiesType::class, $filtresSorties);
 
 
         $form->handleRequest($request);
 
-        $sorties = $sortieRepository->findSortiesByFiltres($filtresSorties, $user);
+        if ($form->isSubmitted() && $form->isValid()) {
 
-        $etatUpdate->CheckedDate($etatRepository, $entityManager, $sorties);
+            $sorties = $sortieRepository->findSortiesByFiltres($filtresSorties, $user);
+        }
+        else{
+            $sorties = $sortieRepository->findSortiesByFiltres($filtresSorties, $user);
+        }
+
+
+
+
+        $etatUpdate->CheckedDate($sorties);
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
@@ -89,7 +98,7 @@ class SortieController extends AbstractController
         if($sortie->getDateLimiteInscription() > new \DateTime() && $sortie->getParticipantsInscrits()->count() < $sortie->getNbInscriptionMax()){
 
             //Récupére l'utilisateur connecter avec sécurité
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->getUser();
             if(!empty($user)){
                 $userId = $user->getId();
             }
@@ -117,7 +126,7 @@ class SortieController extends AbstractController
         $sortie = $sortieRepository->find($id);
         //Verif date limite inscription
         if($sortie->getDateLimiteInscription() > new \DateTime()){
-            $user=$this->tokenStorage->getToken()->getUser();
+            $user=$this->getUser();
 
             if (!empty($user)){
                 $userID = $user->getId();
@@ -146,7 +155,7 @@ class SortieController extends AbstractController
     {
         $sortie = new Sortie();
         //Récupéré l'utilisateur en cours
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->getUser();
 
         //Requête pour récupérer les villes et les envoyés au twig
         $villes = $villeRepository->findAll();
@@ -202,7 +211,7 @@ class SortieController extends AbstractController
     public function modifierSortie(SortieRepository $sortieRepository, int $id, Request $request, VilleRepository $villeRepository,
                                     EtatRepository $etatRepository, EntityManagerInterface $entityManager)
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->getUser();
         $sortie = $sortieRepository->find($id);
         $etat = $etatRepository->findOneBy(['libelle' => 'En création']);
 

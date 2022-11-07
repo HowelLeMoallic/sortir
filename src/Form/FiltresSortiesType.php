@@ -28,7 +28,7 @@ class FiltresSortiesType extends AbstractType
                         return $er->createQueryBuilder('s')->orderBy('s.nom', 'ASC');
                     },
                     'choice_label' => 'nom',
-                    'required' => false,
+
                 ]
             )
             ->add('recherche', SearchType::class, [

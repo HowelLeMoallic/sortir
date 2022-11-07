@@ -7,10 +7,21 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class EtatUpdate
 {
-    public function checkedDate(EtatRepository $etatRepository, EntityManagerInterface $entityManager, $sorties): void
+
+    private $entityManager;
+    private $etatRepository;
+
+    public function __construct(EntityManagerInterface $entityManager, EtatRepository $etatRepository)
+    {
+        $this->etatRepository = $etatRepository;
+        $this->entityManager = $entityManager;
+    }
+
+
+    public function checkedDate($sorties): void
     {
 
-        $etats = $etatRepository->findAll();
+        $etats = $this->etatRepository->findAll();
         $etatAnnuler = in_array('Annule', $etats);
         $etatEnCreation = in_array('En création', $etats);
 
@@ -55,7 +66,7 @@ class EtatUpdate
                 }
             }
 
-            $entityManager->flush();
+            $this->entityManager->flush();
 
         }
     }
