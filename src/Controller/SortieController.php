@@ -285,6 +285,8 @@ class SortieController extends AbstractController
             $this->entityManager->persist($sortie);
             $this->entityManager->flush();
 
+            $this->addFlash('success','Votre sortie a bien été annulée');
+
             return $this->redirectToRoute('accueil');
         }
 
@@ -293,6 +295,20 @@ class SortieController extends AbstractController
             'formMotif' => $formMotif->createView(),
 
         ]);
+
+    }
+
+    #[Route('/sortie/publier/{id}', name: 'publier_sortie', requirements: ['id' => '\d+'])]
+    public function PublierSortie(int $id)
+    {
+        $sortie = $this->sortieRepository->find($id);
+        $sortie->setEtat($this->etatRepository->findOneBy(['libelle' => 'Ouvert']));
+        $this->entityManager->persist($sortie);
+        $this->entityManager->flush();
+
+
+        $this->addFlash('success','Votre sortie a bien été publiée');
+        return $this->redirectToRoute('accueil');
 
     }
 
