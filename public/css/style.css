@@ -66,8 +66,25 @@ nav ul {
 
 }
 
-table, th, td {
+.afficherProfil {
+    display: flex;
+    grid-gap: 5rem;
+
+}
+
+.photo-profil {
+
+    height: 15rem;
+
+}
+
+table{
+    border-collapse: collapse;
+}
+
+th, td{
     border: 1px solid black;
+    padding: 10px;
 }
 
 .filtres{
@@ -102,7 +119,7 @@ table, th, td {
 
 .section-champ-detail {
     display: flex;
-
+    width: 30rem;
     grid-gap: 2rem;
 }
 
@@ -113,7 +130,7 @@ table, th, td {
 
 .section-champ-detail div:first-child{
     font-weight: bold;
-    width: 12rem;
+    width: 15rem;
 }
 
 .section-champ-detail div {
@@ -133,17 +150,21 @@ table, th, td {
     flex-direction: column;
     align-items: center;
     grid-gap: 4rem;
+    font-size: 1.1rem;
+
 }
 
 .afficherDetailSortie {
     display: flex;
     grid-gap: 7rem;
-    width: 75%;
+    width: 100%;
+
+
 }
 
 .divLaterale{
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     grid-gap: 2rem;
 
 }

@@ -6,20 +6,23 @@
 
     <div class="centrer">
         <h1>Mon Profil</h1>
-        {% if participant.photo is not null %}
-            <img src="{{ asset('images/' ~ participant.photo) }}" alt="{{ participant.pseudo }}">
-        {% endif %}
-        <div class="form-profil">
-            {{ form_start(formProfil) }}
-            {{ form_row(formProfil.pseudo) }}
-            {{ form_row(formProfil.prenom) }}
-            {{ form_row(formProfil.nom) }}
-            {{ form_row(formProfil.telephone) }}
-            {{ form_row(formProfil.mail) }}
+        <div class="afficherProfil">
+            {% if participant.photo is not null %}
+                <img src="{{ asset('images/' ~ participant.photo) }}" alt="{{ participant.pseudo }}" class="photo-profil">
+            {% endif %}
+            <div class="form-profil">
+                {{ form_start(formProfil) }}
+                {{ form_row(formProfil.pseudo) }}
+                {{ form_row(formProfil.prenom) }}
+                {{ form_row(formProfil.nom) }}
+                {{ form_row(formProfil.telephone) }}
+                {{ form_row(formProfil.mail) }}
 
-            {{ form_row(formProfil.campus) }}
-            {{ form_end(formProfil) }}
+                {{ form_row(formProfil.campus) }}
+                {{ form_end(formProfil) }}
+            </div>
         </div>
+
 
 
     </div>
