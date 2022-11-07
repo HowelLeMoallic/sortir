@@ -6,6 +6,7 @@ use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
 use App\Service\ImageUpload;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function PHPUnit\Framework\isEmpty;
 
+#[IsGranted('ROLE_USER')]
 class ParticipantController extends AbstractController
 {
     #[Route('/profilUser', name: 'profil_connecte')]

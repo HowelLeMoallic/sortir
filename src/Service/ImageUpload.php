@@ -27,10 +27,12 @@ class ImageUpload
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $this->slugger->slug($originalFilename);
         $fileName = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+        //Récupère le chemin complet de la photo
         $image = $this->getTargetDirectory().'/'.$this->security->getUser()->getPhoto();
 
 
         try {
+            //Si une image déjà existante
             if ($image){
                 $this->security->getUser()->setPhoto(''); //ici pour vider le nom de mon fichier dans mon entité
                 unlink($image); //ici je supprime le fichier

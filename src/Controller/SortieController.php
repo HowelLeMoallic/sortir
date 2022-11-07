@@ -15,48 +15,46 @@ use App\Repository\SortieRepository;
 use App\Repository\VilleRepository;
 use App\Service\EtatUpdate;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-
+#[IsGranted('ROLE_USER')]
 class SortieController extends AbstractController
 {
-    private $tokenStorage;
 
-
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(private SortieRepository $sortieRepository, private  EtatRepository $etatRepository,
+                                private EntityManagerInterface $entityManager, private ParticipantRepository $participantRepository,
+                                private VilleRepository $villeRepository)
     {
-        $this->tokenStorage = $tokenStorage;
+
     }
 
     #[Route('/sortie', name: 'accueil')]
-    public function index(SortieRepository $sortieRepository, Request $request, EtatUpdate $etatUpdate, EtatRepository $etatRepository, EntityManagerInterface $entityManager): Response
+    public function index(Request $request, EtatUpdate $etatUpdate): Response
     {
         $user = $this->getUser();
 
         $filtresSorties = new FiltresSortiesFormModel();
-        //Problème de requête en plus
+
+        //Mettre par défaut le campus de l'utilisateur
         $filtresSorties->setCampus($user->getCampus());
 
         $form = $this->createForm(FiltresSortiesType::class, $filtresSorties);
-
-
         $form->handleRequest($request);
 
+        //Si formulaire valide
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $sorties = $sortieRepository->findSortiesByFiltres($filtresSorties, $user);
+            $sorties = $this->sortieRepository->findSortiesByFiltres($filtresSorties, $user);
         }
         else{
-            $sorties = $sortieRepository->findSortiesByFiltres($filtresSorties, $user);
+            $sorties = $this->sortieRepository->findSortiesByFiltres($filtresSorties, $user);
         }
 
-
-
-
+        //MAJ etat sur le liste des sorties
         $etatUpdate->CheckedDate($sorties);
 
         return $this->render('sortie/index.html.twig', [
@@ -68,13 +66,11 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sortie/detail/{id}', name: 'detail_event', requirements: ['id' => '\d+'])]
-    public function detailSortie(int $id, SortieRepository $sortieRepository){
+    public function detailSortie(int $id){
 
-        $event = $sortieRepository->find($id);
+        $event = $this->sortieRepository->find($id);
 
         $nbPlacesRestantes = $event->getNbInscriptionMax() - $event->getParticipantsInscrits()->count();
-
-
 
         $participants = $event->getParticipantsInscrits();
 
@@ -87,13 +83,11 @@ class SortieController extends AbstractController
     }
 
     #[Route('/inscription/{id}', name: 'inscription_participant', requirements: ['id' => '\d+'])]
-    public function inscription(int $id, SortieRepository $sortieRepository, ParticipantRepository $participantRepository,
-                                    EntityManagerInterface $entityManager)
+    public function inscription(int $id)
     {
 
-
         //Requête pour récupérer qu'une sortie en fonction de son id
-        $sortie = $sortieRepository->find($id);
+        $sortie = $this->sortieRepository->find($id);
         //Verif date limite d'inscription $$ nb Inscrit
         if($sortie->getDateLimiteInscription() > new \DateTime() && $sortie->getParticipantsInscrits()->count() < $sortie->getNbInscriptionMax()){
 
@@ -103,10 +97,10 @@ class SortieController extends AbstractController
                 $userId = $user->getId();
             }
             //Ajout du participant dans la sortie
-            $sortie->addParticipantsInscrit($participantRepository->find($userId));
+            $sortie->addParticipantsInscrit($this->participantRepository->find($userId));
 
-            $entityManager->persist($sortie);
-            $entityManager->flush();
+            $this->entityManager->persist($sortie);
+            $this->entityManager->flush();
             $this->addFlash('success', 'Vous êtes bien inscrit à l\'activité '.$sortie->getNom());
 
         }
@@ -119,11 +113,10 @@ class SortieController extends AbstractController
     }
 
     #[Route('/desinscription/{id}', name: 'desinscription_participant', requirements: ['id' => '\d+'])]
-    public function desinscription(int $id, SortieRepository $sortieRepository, ParticipantRepository $participantRepository,
-                                        EntityManagerInterface $entityManager)
+    public function desinscription(int $id)
     {
 
-        $sortie = $sortieRepository->find($id);
+        $sortie = $this->sortieRepository->find($id);
         //Verif date limite inscription
         if($sortie->getDateLimiteInscription() > new \DateTime()){
             $user=$this->getUser();
@@ -132,12 +125,12 @@ class SortieController extends AbstractController
                 $userID = $user->getId();
             }
 
-            $participant = $participantRepository->find($userID);
+            $participant = $this->participantRepository->find($userID);
             //Supprime le participant de la liste de participants à la sortie
             $sortie->removeParticipantsInscrit($participant);
 
-            $entityManager->persist($sortie);
-            $entityManager->flush();
+            $this->entityManager->persist($sortie);
+            $this->entityManager->flush();
 
             $this->addFlash('success', 'Vous êtes bien désinscrit à l\'activité '.$sortie->getNom());
         }
@@ -151,14 +144,14 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sortie/creation', name: 'creation_sortie')]
-    public function creation(Request $request, EntityManagerInterface $entityManager, VilleRepository $villeRepository, EtatRepository $etatRepository)
+    public function creation(Request $request)
     {
         $sortie = new Sortie();
         //Récupéré l'utilisateur en cours
         $user = $this->getUser();
 
         //Requête pour récupérer les villes et les envoyés au twig
-        $villes = $villeRepository->findAll();
+        $villes = $this->villeRepository->findAll();
 
         $form = $this->createForm(CreationSortieType::class, $sortie);
         $form->handleRequest($request);
@@ -170,14 +163,14 @@ class SortieController extends AbstractController
                     //Modifie l'utilisateur
                     $sortie->setOrganisateur($user);
                     //Recherche l'état en fonction de son libelle
-                    $etat = $etatRepository->findOneBy(['libelle' => 'Ouvert']);
+                    $etat = $this->etatRepository->findOneBy(['libelle' => 'Ouvert']);
                     $this->addFlash('success','Votre saisie a bien été publiée');
 
                     //Modifie l'état
                     $sortie->setEtat($etat);
 
-                    $entityManager->persist($sortie);
-                    $entityManager->flush();
+                    $this->entityManager->persist($sortie);
+                    $this->entityManager->flush();
 
                     return $this->redirectToRoute('accueil');
                 }
@@ -185,13 +178,13 @@ class SortieController extends AbstractController
                     //Modifie l'utilisateur
                     $sortie->setOrganisateur($user);
                     //Recherche l'état en fonction de son libelle
-                    $etat = $etatRepository->findOneBy(['libelle' => 'En création']);
+                    $etat = $this->etatRepository->findOneBy(['libelle' => 'En création']);
                     $this->addFlash('success','Votre saisie a bien été enregistrée');
                     //Modifie l'état
                     $sortie->setEtat($etat);
 
-                    $entityManager->persist($sortie);
-                    $entityManager->flush();
+                    $this->entityManager->persist($sortie);
+                    $this->entityManager->flush();
 
                     return $this->redirectToRoute('accueil');
                 }
@@ -208,15 +201,14 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sortie/modification/{id}', name: 'modification_sortie')]
-    public function modifierSortie(SortieRepository $sortieRepository, int $id, Request $request, VilleRepository $villeRepository,
-                                    EtatRepository $etatRepository, EntityManagerInterface $entityManager)
+    public function modifierSortie(int $id, Request $request)
     {
         $user = $this->getUser();
-        $sortie = $sortieRepository->find($id);
-        $etat = $etatRepository->findOneBy(['libelle' => 'En création']);
+        $sortie = $this->sortieRepository->find($id);
+        $etat = $this->etatRepository->findOneBy(['libelle' => 'En création']);
 
         //Requête pour récupérer les villes et les envoyés au twig
-        $villes = $villeRepository->findAll();
+        $villes = $this->villeRepository->findAll();
 
         $formSortie = $this->createForm(CreationSortieType::class, $sortie);
         $formSortie->handleRequest($request);
@@ -229,34 +221,34 @@ class SortieController extends AbstractController
                 if($formSortie->get('Publier')->isClicked()){
 
                     //Recherche l'état en fonction de son libelle
-                    $etat = $etatRepository->findOneBy(['libelle' => 'Ouvert']);
+                    $etat = $this->etatRepository->findOneBy(['libelle' => 'Ouvert']);
 
                     //Modifie l'état
                     $sortie->setEtat($etat);
 
-                    $entityManager->persist($sortie);
-                    $entityManager->flush();
+                    $this->entityManager->persist($sortie);
+                    $this->entityManager->flush();
 
                     $this->addFlash('success','Votre saisie a bien été publiée');
                     return $this->redirectToRoute('accueil');
                 } else if($formSortie->get('Enregistrer')->isClicked()){
 
                     //Recherche l'état en fonction de son libelle
-                    $etat = $etatRepository->findOneBy(['libelle' => 'En création']);
+                    $etat = $this->etatRepository->findOneBy(['libelle' => 'En création']);
 
                     //Modifie l'état
                     $sortie->setEtat($etat);
 
-                    $entityManager->persist($sortie);
-                    $entityManager->flush();
+                    $this->entityManager->persist($sortie);
+                    $this->entityManager->flush();
 
                     $this->addFlash('success','Votre saisie a bien été enregistrée');
                     return $this->redirectToRoute('accueil');
                 // if ($formSortie->get('Supprimer')->isClicked())
                 } else{
 
-                    $entityManager->remove($sortie);
-                    $entityManager->flush();
+                    $this->entityManager->remove($sortie);
+                    $this->entityManager->flush();
 
                     $this->addFlash('success','Votre saisie a bien été supprimée');
                     return $this->redirectToRoute('accueil');
@@ -275,9 +267,9 @@ class SortieController extends AbstractController
     }
 
     #[Route('/sortie/annuler/{id}', name: 'annuler_sortie', requirements: ['id' => '\d+'])]
-    public function AnnulerSortie(int $id, SortieRepository $sortieRepository, Request $request, EntityManagerInterface $entityManager, EtatRepository $etatRepository)
+    public function AnnulerSortie(int $id, Request $request)
     {
-        $sortie = $sortieRepository->find($id);
+        $sortie = $this->sortieRepository->find($id);
 
         $description = $sortie->getInfosSortie();
 
@@ -287,11 +279,11 @@ class SortieController extends AbstractController
 
         if ($formMotif->isSubmitted() && $formMotif->isValid()) {
             $sortie->setInfosSortie($description . ' ANNULEE ' . $sortie->getInfosSortie());
-            $etat = $etatRepository->findOneBy(['libelle' => 'Annulé']);
+            $etat = $this->etatRepository->findOneBy(['libelle' => 'Annulé']);
             $sortie->setEtat($etat);
 
-            $entityManager->persist($sortie);
-            $entityManager->flush();
+            $this->entityManager->persist($sortie);
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('accueil');
         }
