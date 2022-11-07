@@ -55,8 +55,7 @@ class SortieRepository extends ServiceEntityRepository
             ->addSelect('participantsInscrits')
             ->orderBy('sortie.dateHeureDebut', 'ASC' );
         if ($filtres->getCampus()) {
-            $qb
-                ->andWhere('campus.nom = :campus')
+            $qb->andWhere('campus.nom = :campus')
                 ->setParameter('campus', $filtres->getCampus()->getNom())
                 ->andWhere('etat.libelle != :historise')
                 ->setParameter('historise', 'Historisé');
@@ -75,7 +74,8 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('fin', $filtres->getDateFin())
                 ->andWhere('etat.libelle != :historise')
                 ->setParameter('historise', 'Historisé');
-        }elseif ($filtres->getOrganisateur()) {
+        }
+        if ($filtres->getOrganisateur()) {
             $qb->andWhere('sortie.organisateur = :user')
                 ->setParameter('user', $user)
                 ->andWhere('etat.libelle != :historise')

@@ -38,8 +38,11 @@ class SortieController extends AbstractController
         $user = $this->getUser();
 
         $filtresSorties = new FiltresSortiesFormModel();
+        //Problème de requête en plus
+        //$filtresSorties->setCampus($user->getCampus());
 
         $form = $this->createForm(FiltresSortiesType::class, $filtresSorties);
+
 
         $form->handleRequest($request);
 
