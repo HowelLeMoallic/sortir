@@ -3,5 +3,14 @@
 {% block title %}Hello LieuController!{% endblock %}
 
 {% block body %}
-    {{ form(formLieu) }}
+
+    {{ form_start(formLieu) }}
+        {{ form_widget(formLieu) }}
+        <section>
+            <button type="submit">
+                Envoyer
+            </button>
+        </section>
+    {{ form_end(formLieu) }}
+
 {% endblock %}

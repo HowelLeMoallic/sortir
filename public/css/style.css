@@ -360,6 +360,42 @@ Création d'une sortie
 }
 /*
 
+Création d'un lieu
+
+ */
+#creation_lieu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    grid-gap: 2rem;
+    margin-top: 2rem;
+}
+
+#creation_lieu div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 50%;
+}
+
+#creation_lieu input, select{
+    width: 20rem;
+}
+
+#creation_lieu div:last-child{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+form section{
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+/*
+
 Message d'erreurs/succès
 
 
