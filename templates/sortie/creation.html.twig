@@ -9,8 +9,11 @@
 {% block body %}
     <div class="container-creation-sortie">
         {{ form_start(formCreation) }}
-{#            <div>#}
-                {{ form_row(formCreation.organisateur) }}
+                <div id="organisateur">
+                    <label for="organisateur">Organisateur</label>
+                    <h3>{{ organisateur.pseudo }}</h3>
+                </div>
+{#                {{ form_row(formCreation.organisateur) }}#}
                 {{ form_row(formCreation.nom) }}
                 {{ form_row(formCreation.dateHeureDebut) }}
                 {{ form_row(formCreation.dateLimiteInscription) }}

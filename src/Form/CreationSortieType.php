@@ -45,11 +45,11 @@ class CreationSortieType extends AbstractType
                 'class' => Campus::class,
                 'choice_label' => 'nom',
             ])
-            ->add('organisateur',EntityType::class, [
-                'class' => Participant::class,
-                'choice_label' => 'pseudo',
-                'disabled' => true
-            ])
+//            ->add('organisateur',EntityType::class, [
+//                'class' => Participant::class,
+//                'choice_label' => 'pseudo',
+//                'disabled' => true
+//            ])
             ->add('Publier', SubmitType::class)
             ->add('Enregistrer', SubmitType::class);
 

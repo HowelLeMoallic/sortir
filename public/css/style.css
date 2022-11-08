@@ -201,7 +201,6 @@ th, td{
 .form-profil form div:last-of-type button {
     width: 7rem;
 }
-
 /*
 
 Création d'une sortie
@@ -232,6 +231,10 @@ Création d'une sortie
     height: fit-content;
 }
 
+
+.container-creation-sortie #organisateur h3{
+    width: 40%;
+}
 /*
 
 Message d'erreurs/succès
