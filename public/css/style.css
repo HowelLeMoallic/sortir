@@ -1,10 +1,13 @@
 body {
-    background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);
+    background-image: url("../images/pexels-pixabay-260922.jpg");
+    backdrop-filter: blur(4px);
     background-attachment: fixed;
     background-position: center center;
     background-size: cover;
+
     color: #EEE;
     font-family: 'Roboto', serif;
+
 }
 
 .container {
@@ -39,15 +42,52 @@ body > .container {
 header{
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    margin-bottom: 3rem;
 }
 
 header img {
     height: 70px;
 }
 
+footer {
+    display: flex;
+    justify-content: center;
+}
+
+
+button {
+   background-color: #fbeee0;
+   border: 2px solid #422800;
+   border-radius: 30px;
+   box-shadow: #422800 4px 4px 0 0;
+   color: #422800;
+   cursor: pointer;
+   display: inline-block;
+   font-weight: 600;
+   font-size: 18px;
+   padding: 0 18px;
+   line-height: 50px;
+   text-align: center;
+   text-decoration: none;
+   user-select: none;
+   -webkit-user-select: none;
+   touch-action: manipulation;
+}
+
+button:hover {
+    background-color: #fff;
+}
+
+button:active {
+    box-shadow: #422800 2px 2px 0 0;
+    transform: translate(2px, 2px);
+}
+
+
+
 main {
     flex: 1;
+
 
 
 }
@@ -58,6 +98,21 @@ nav ul {
     list-style: none;
     padding-left: 0;
 }
+
+/*Page de login*/
+
+.form-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    grid-gap: 2rem;
+}
+
+.form-login-input {
+    display: flex;
+    flex-direction: column;
+}
+
 
 
 
@@ -94,7 +149,7 @@ nav ul {
 .filtres {
     display: flex;
     align-items: center;
-    grid-gap: 15rem;
+    grid-gap: 5rem;
 
 }
 
@@ -114,9 +169,15 @@ nav ul {
     margin-bottom: 5rem;
 }
 
+.filtres-checkbox div {
+    height: 1.5rem;
+
+}
+
 
 .filtres-input div {
     display: flex;
+    height: 1.5rem;
 }
 
 .filtres-input  label {
@@ -143,11 +204,17 @@ nav ul {
 table{
     border-collapse: collapse;
     overflow-y: scroll;
+    font-size: 1.1rem;
 }
 
 th, td{
     border: 1px solid black;
     padding: 10px;
+}
+
+.tableau {
+    margin-bottom: 5rem;
+
 }
 
 
