@@ -59,6 +59,9 @@ nav ul {
     padding-left: 0;
 }
 
+
+
+/*Page Accueil: date du jour et info utilisateur*/
 .info-participant{
     display: flex;
     flex-direction: column;
@@ -66,6 +69,9 @@ nav ul {
 
 }
 
+
+
+/*Page Afficher profil utilsateur*/
 .afficherProfil {
     display: flex;
     grid-gap: 5rem;
@@ -78,8 +84,65 @@ nav ul {
 
 }
 
+/*Formulaire filtres page accueil*/
+.afficherFiltres {
+    display: flex;
+    grid-gap: 2rem;
+    flex-direction: column;
+}
+
+.filtres {
+    display: flex;
+    align-items: center;
+    grid-gap: 15rem;
+
+}
+
+.filtres label {
+    font-weight: bold;
+
+}
+
+.filtres-input {
+    display: flex;
+    flex-direction: column;
+    grid-gap: 1rem;
+
+}
+.filtres-submit {
+    margin-top: 2rem;
+    margin-bottom: 5rem;
+}
+
+
+.filtres-input div {
+    display: flex;
+}
+
+.filtres-input  label {
+    width: 15rem;;
+}
+
+.filtres-checkbox {
+    display: flex;
+    flex-direction: column;
+    grid-gap: 1rem;
+}
+
+
+.date-interval{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+
+
+/*Tableau de sorties*/
 table{
     border-collapse: collapse;
+    overflow-y: scroll;
 }
 
 th, td{
@@ -87,16 +150,9 @@ th, td{
     padding: 10px;
 }
 
-.filtres{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 
-.date-interval{
-    display: flex;
-    justify-content: space-between;
-}
+
+
 
 .form-annuler-sortie {
     display: flex;

@@ -15,28 +15,51 @@
 
 
     {# Afficher les filtres de recherche #}
-    <div>
+    <div class="afficherFiltres">
         <h2>Filtrer les sorties</h2>
 
         {{ form_start(formSorties) }}
         <div class="filtres">
-            <div>
+            <div class="filtres-input">
                 {{ form_row(formSorties.campus) }}
                 {{ form_row(formSorties.recherche) }}
-                <div class="date-interval">
-                    {{ form_row(formSorties.dateDebut) }}
-                    {{ form_row(formSorties.dateFin) }}
+
+                {{ form_row(formSorties.dateDebut) }}
+                {{ form_row(formSorties.dateFin) }}
+
+            </div>
+            <div class="filtres-checkbox">
+                <div>
+                    {{ form_widget(formSorties.organisateur) }}
+                    {{ form_label(formSorties.organisateur) }}
+
                 </div>
-            </div>
-            <div>
+                <div>
+                    {{ form_widget(formSorties.inscrit) }}
+                    {{ form_label(formSorties.inscrit) }}
 
-                {{ form_row(formSorties.organisateur) }}
-                {{ form_row(formSorties.inscrit) }}
-                {{ form_row(formSorties.nonInscrit) }}
-                {{ form_row(formSorties.sortiesPassees) }}
+                </div>
+                <div>
+                    {{ form_widget(formSorties.nonInscrit) }}
+                    {{ form_label(formSorties.nonInscrit) }}
+
+                </div>
+                <div>
+                    {{ form_widget(formSorties.sortiesPassees) }}
+                    {{ form_label(formSorties.sortiesPassees) }}
+
+                </div>
+
 
             </div>
+
         </div>
+
+        <div class="filtres-submit">
+            {{ form_row(formSorties.Recherche) }}
+        </div>
+
+
         {{ form_end(formSorties) }}
 
 
