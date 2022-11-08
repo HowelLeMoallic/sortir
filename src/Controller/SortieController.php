@@ -67,12 +67,21 @@ class SortieController extends AbstractController
     #[Route('/sortie/detail/{id}', name: 'detail_event', requirements: ['id' => '\d+'])]
     public function detailSortie(int $id){
 
+        //Recherch de l'id avec son id
         $event = $this->sortieRepository->find($id);
+        //Verif si il existe
+        if($event){
 
-        $nbPlacesRestantes = $event->getNbInscriptionMax() - $event->getParticipantsInscrits()->count();
+            $nbPlacesRestantes = $event->getNbInscriptionMax() - $event->getParticipantsInscrits()->count();
 
-        $participants = $event->getParticipantsInscrits();
+            $participants = $event->getParticipantsInscrits();
 
+        //sinon
+        }else{
+            //affche erreur
+            $this->addFlash('error', 'Vous n\'avez pas accès à cette sortie' );
+            return $this->redirectToRoute('accueil');
+        }
         return $this->render('sortie/detail.html.twig', [
             'event' => $event,
             'participants' => $participants,
@@ -159,32 +168,11 @@ class SortieController extends AbstractController
             if($sortie->getDateHeureDebut() >= $sortie->getDateLimiteInscription()){
                 //En fonction du bouton clické
                 if($form->get('Publier')->isClicked()){
-                    //Modifie l'utilisateur
-                    $sortie->setOrganisateur($user);
-                    //Recherche l'état en fonction de son libelle
-                    $etat = $this->etatRepository->findOneBy(['libelle' => 'Ouvert']);
-                    $this->addFlash('success','Votre saisie a bien été publiée');
-
-                    //Modifie l'état
-                    $sortie->setEtat($etat);
-
-                    $this->entityManager->persist($sortie);
-                    $this->entityManager->flush();
-
+                    $this->modifEtat($sortie, $user, 'Ouvert', 'publiée');
                     return $this->redirectToRoute('accueil');
                 }
                 else if($form->get('Enregistrer')->isClicked()){
-                    //Modifie l'utilisateur
-                    $sortie->setOrganisateur($user);
-                    //Recherche l'état en fonction de son libelle
-                    $etat = $this->etatRepository->findOneBy(['libelle' => 'En création']);
-                    $this->addFlash('success','Votre saisie a bien été enregistrée');
-                    //Modifie l'état
-                    $sortie->setEtat($etat);
-
-                    $this->entityManager->persist($sortie);
-                    $this->entityManager->flush();
-
+                    $this->modifEtat($sortie, $user, 'En création', 'enregistrée');
                     return $this->redirectToRoute('accueil');
                 }
             }else{
@@ -205,6 +193,7 @@ class SortieController extends AbstractController
     {
         $user = $this->getUser();
         $sortie = $this->sortieRepository->find($id);
+
         $etat = $this->etatRepository->findOneBy(['libelle' => 'En création']);
 
         //Requête pour récupérer les villes et les envoyés au twig
@@ -220,30 +209,14 @@ class SortieController extends AbstractController
                 //En fonction du bouton clické
                 if($formSortie->get('Publier')->isClicked()){
 
-                    //Recherche l'état en fonction de son libelle
-                    $etat = $this->etatRepository->findOneBy(['libelle' => 'Ouvert']);
-
-                    //Modifie l'état
-                    $sortie->setEtat($etat);
-
-                    $this->entityManager->persist($sortie);
-                    $this->entityManager->flush();
-
-                    $this->addFlash('success','Votre saisie a bien été publiée');
+                    $this->modifEtat($sortie, $user, 'Ouvert', 'publiée');
                     return $this->redirectToRoute('accueil');
+
                 } else if($formSortie->get('Enregistrer')->isClicked()){
 
-                    //Recherche l'état en fonction de son libelle
-                    $etat = $this->etatRepository->findOneBy(['libelle' => 'En création']);
-
-                    //Modifie l'état
-                    $sortie->setEtat($etat);
-
-                    $this->entityManager->persist($sortie);
-                    $this->entityManager->flush();
-
-                    $this->addFlash('success','Votre saisie a bien été enregistrée');
+                    $this->modifEtat($sortie, $user, 'En création', 'enregistrée');
                     return $this->redirectToRoute('accueil');
+
                 // if ($formSortie->get('Supprimer')->isClicked())
                 } else{
 
@@ -312,4 +285,19 @@ class SortieController extends AbstractController
 
     }
 
+    public function modifEtat($sortie, $user, string $etatLibelle, string $message){
+
+        //Modifie l'utilisateur
+        $sortie->setOrganisateur($user);
+        //Recherche l'état en fonction de son libelle
+        $etat = $this->etatRepository->findOneBy(['libelle' => $etatLibelle]);
+        $this->addFlash('success','Votre saisie a bien été '.$message);
+
+        //Modifie l'état
+        $sortie->setEtat($etat);
+
+        $this->entityManager->persist($sortie);
+        $this->entityManager->flush();
+
+    }
 }
