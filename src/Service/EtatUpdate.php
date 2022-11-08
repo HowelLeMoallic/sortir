@@ -24,6 +24,7 @@ class EtatUpdate
         $etats = $this->etatRepository->findAll();
         $etatAnnuler = in_array('Annule', $etats);
         $etatEnCreation = in_array('En création', $etats);
+        $etatTerminer = in_array('Terminé', $etats);
 
         $dateDuJour = new \DateTime('now');
 
@@ -37,39 +38,51 @@ class EtatUpdate
             $dateFinSorties = clone $sortie->getDateHeureDebut();
             $dateFinSorties->modify('+' . $sortie->getDuree() . ' minutes');
 
-            if ($sortie->getDateHeureDebut() < $dateUnMoisAvant) {
-                foreach ($etats as $etat) {
-                    if ($etat->getLibelle() == 'Historisé') {
-                        $sortie->setEtat($etat);
-                    }
-                }
-            } elseif ($sortie->getEtat() != $etatAnnuler) {
+
+            if ($sortie->getEtat() != $etatAnnuler) {
+
                 if ($sortie->getDateHeureDebut() < $dateDuJour and $dateFinSorties > $dateDuJour) {
+
                     foreach ($etats as $etat) {
+
                         if ($etat->getLibelle() == 'En cours') {
                             $sortie->setEtat($etat);
+
                         }
                     }
                 }
-            } elseif ($sortie->getDateHeureDebut() < $dateDuJour) {
-                foreach ($etats as $etat) {
-                    if ($etat->getLibelle() == 'Terminé') {
-                        $sortie->setEtat($etat);
-                    }
-                }
-            } elseif ($sortie->getParticipantsInscrits()->count() == $sortie->getNbInscriptionMax() || $sortie->getDateLimiteInscription() < $dateDuJour) {
+            }
+            if (($sortie->getParticipantsInscrits()->count() == $sortie->getNbInscriptionMax() || $sortie->getDateLimiteInscription() < $dateDuJour) and $sortie->getEtat() != $etatTerminer) {
                 foreach ($etats as $etat) {
                     if ($etat->getLibelle() == 'Fermé') {
                         $sortie->setEtat($etat);
                     }
                 }
-            } elseif ($sortie->getParticipantsInscrits()->count() < $sortie->getNbInscriptionMax() and $sortie->getEtat() != $etatEnCreation ) {
+            }
+            if ($sortie->getParticipantsInscrits()->count() < $sortie->getNbInscriptionMax() and $sortie->getEtat() != $etatEnCreation and $sortie->getDateLimiteInscription() > $dateDuJour) {
                 foreach ($etats as $etat) {
                     if ($etat->getLibelle() == 'Ouvert') {
                         $sortie->setEtat($etat);
                     }
                 }
             }
+            if ($dateFinSorties < $dateDuJour) {
+                foreach ($etats as $etat) {
+                    if ($etat->getLibelle() == 'Terminé') {
+                        $sortie->setEtat($etat);
+
+                    }
+                }
+            }
+            if ($dateFinSorties < $dateUnMoisAvant) {
+
+                foreach ($etats as $etat) {
+                    if ($etat->getLibelle() == 'Historisé') {
+                        $sortie->setEtat($etat);
+                    }
+                }
+            }
+
 
             $this->entityManager->flush();
 

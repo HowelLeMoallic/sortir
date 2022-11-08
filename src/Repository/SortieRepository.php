@@ -59,12 +59,13 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('campus', $filtres->getCampus()->getNom())
                 ->andWhere('etat.libelle != :historise')
                 ->setParameter('historise', 'Historisé');
-        }elseif ($filtres->getRecherche()) {
+        }
+        if ($filtres->getRecherche()) {
             $qb->andWhere('sortie.nom LIKE :nom')
                 ->setParameter('nom', '%'.$filtres->getRecherche().'%')
                 ->andWhere('etat.libelle != :historise')
                 ->setParameter('historise', 'Historisé');
-        }elseif ($filtres->getDateDebut()) {
+        }if ($filtres->getDateDebut()) {
             $qb->andWhere('sortie.dateHeureDebut >= :debut')
                 ->setParameter('debut', $filtres->getDateDebut())
                 ->andWhere('etat.libelle != :historise')
