@@ -1,6 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ parent() }} - Accueil{% endblock %}
+{% block javascripts %}
+    <script>
+        $(window).on("load resize ", function() {
+            var scrollWidth = $('tbody').width();
+            $('theader').css({'padding-right':scrollWidth});
+        }).resize();
+    </script>
+{% endblock %}
 
 {% block body %}
 
@@ -12,7 +20,6 @@
         </div>
 
     </div>
-
 
     {# Afficher les filtres de recherche #}
     <div class="afficherFiltres">
@@ -50,7 +57,6 @@
 
                 </div>
 
-
             </div>
 
         </div>
@@ -66,85 +72,87 @@
     </div>
 
     {# Afficher la liste des sorties #}
-    <table class="tableau">
-        <thead>
-            <tr>
-                <th>Nom de la sortie</th>
-                <th>Date de la sortie</th>
-                <th>Date de clôture</th>
-                <th>Nombres d'inscrits</th>
-                <th>Etat</th>
-                <th>Inscrit</th>
-                <th>Organisateur</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <section id="liste-sorties">
+        <div class="tbl-header">
+            <table cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                <tr>
+                    <th>Nom de la sortie</th>
+                    <th>Date de la sortie</th>
+                    <th>Date de clôture</th>
+                    <th>Nombres d'inscrits</th>
+                    <th>Etat</th>
+                    <th>Inscrit</th>
+                    <th>Organisateur</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tbl-content">
+            <table cellpadding="0" cellspacing="0" border="0">
+                <tbody>
 
+                    {% for sortie in sorties %}
+                        <tr>
+                            <td>{{ sortie.nom }}</td>
+                            <td>{{ sortie.dateHeureDebut.format('d/m/Y') }}</td>
+                            <td>{{ sortie.dateLimiteInscription.format('d/m/Y') }}</td>
+                            <td>{{ sortie.participantsInscrits.count }}/{{ sortie.nbInscriptionMax }}</td>
+                            <td>{{ sortie.etat.libelle }}</td>
+                            <td>
+                                {% if sortie.participantsInscrits.contains(app.user) %}
+                                    <span>X</span>
+                                {% else %}
+                                    <span> </span>
 
-        {% for sortie in sorties %}
-            <tr>
-                <td>{{ sortie.nom }}</td>
-                <td>{{ sortie.dateHeureDebut.format('d/m/Y') }}</td>
-                <td>{{ sortie.dateLimiteInscription.format('d/m/Y') }}</td>
-                <td>{{ sortie.participantsInscrits.count }}/{{ sortie.nbInscriptionMax }}</td>
-                <td>{{ sortie.etat.libelle }}</td>
-                <td>
-                    {% if sortie.participantsInscrits.contains(app.user) %}
-                        <span>X</span>
-                    {% else %}
-                        <span> </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if sortie.organisateur == app.user %}
+                                    <a href="{{ path('profil_connecte') }}">{{ sortie.organisateur.pseudo }}</a>
 
-                    {% endif %}
-                </td>
-                <td>
-                    {% if sortie.organisateur == app.user %}
-                        <a href="{{ path('profil_connecte') }}">{{ sortie.organisateur.pseudo }}</a>
+                                {% else %}
+                                    <a href="{{ path('profil_organisateur', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo }}</a>
+                                {% endif %}
 
-                    {% else %}
-                        <a href="{{ path('profil_organisateur', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo }}</a>
-                    {% endif %}
+                            </td>
+                            <td>
+                                {% if sortie.etat.libelle != 'En création'%}
+                                    <a href="{{ path('detail_event', {'id': sortie.id}) }}">Afficher</a>
 
-                </td>
-                <td>
-                    {% if sortie.etat.libelle != 'En création'%}
-                        <a href="{{ path('detail_event', {'id': sortie.id}) }}">Afficher</a>
+                                    {% if sortie.dateLimiteInscription > date("now") and sortie.etat.libelle != 'Annulé'%}
+                                        {% if sortie.organisateur == app.user %}
+                                            <span> - </span>
+                                            <a href="{{ path('annuler_sortie', {'id': sortie.id}) }}">Annuler</a>
+                                        {% elseif sortie.participantsInscrits.contains(app.user)%}
+                                            <span> - </span>
+                                            <a href="{{ path('desinscription_participant', {'id': sortie.id}) }}">Se désister</a>
+                                        {% elseif sortie.participantsInscrits.count < sortie.nbInscriptionMax %}
+                                            <span> - </span>
+                                            <a href="{{ path('inscription_participant', {'id': sortie.id}) }}">S'incrire</a>
+                                        {% endif %}
+                                    {% endif %}
 
-                        {% if sortie.dateLimiteInscription > date("now") and sortie.etat.libelle != 'Annulé'%}
-                            {% if sortie.organisateur == app.user %}
-                                <span> - </span>
-                                <a href="{{ path('annuler_sortie', {'id': sortie.id}) }}">Annuler</a>
-                            {% elseif sortie.participantsInscrits.contains(app.user)%}
-                                <span> - </span>
-                                <a href="{{ path('desinscription_participant', {'id': sortie.id}) }}">Se désister</a>
-                            {% elseif sortie.participantsInscrits.count < sortie.nbInscriptionMax %}
-                                <span> - </span>
-                                <a href="{{ path('inscription_participant', {'id': sortie.id}) }}">S'incrire</a>
-                            {% endif %}
-                        {% endif %}
+                                {% elseif sortie.etat.libelle == 'En création' and sortie.organisateur == app.user %}
+                                    <a href="{{ path('modification_sortie',  {'id' : sortie.id}) }}">Modifier</a>
+                                    <span> - </span>
+                                    <a href="{{ path('publier_sortie', {'id': sortie.id }) }}">Publier</a>
+                                {% endif %}
+                            </td>
 
-                    {% elseif sortie.etat.libelle == 'En création' and sortie.organisateur == app.user %}
-                        <a href="{{ path('modification_sortie',  {'id' : sortie.id}) }}">Modifier</a>
-                        <span> - </span>
-                        <a href="{{ path('publier_sortie', {'id': sortie.id }) }}">Publier</a>
-                    {% endif %}
-                </td>
+                        </tr>
 
-            </tr>
-
-        {% endfor %}
-        </tbody>
-
-    </table>
-
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 
     <div>
         <button>
             <a href="{{ path('creation_sortie') }}">Créer une sortie</a>
         </button>
     </div>
-
-
-
 
 {% endblock %}
