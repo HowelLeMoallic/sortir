@@ -6,7 +6,6 @@ use App\Entity\Sortie;
 use App\Form\AnnulerSortieType;
 use App\Form\CreationSortieType;
 use App\Form\FiltresSortiesType;
-use App\Form\InfoSortieType;
 use App\Form\Model\FiltresSortiesFormModel;
 
 use App\Repository\EtatRepository;
@@ -261,7 +260,7 @@ class SortieController extends AbstractController
             ]);
 
         }else{
-            $this->addFlash('success','Vous ne pouvez pas modifier la sortie');
+            $this->addFlash('error','Vous ne pouvez pas modifier la sortie');
             return $this->redirectToRoute('accueil');
         }
     }
