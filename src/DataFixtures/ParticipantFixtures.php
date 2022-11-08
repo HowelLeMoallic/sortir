@@ -7,6 +7,8 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Faker\Factory;
+use Faker\ORM\Doctrine\Populator;
 
 class ParticipantFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -16,6 +18,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
+
         $admin = new Participant();
         $admin->setPseudo('admin');
         $admin->setPassword($this->hasher->hashPassword($admin, 'admin'));
@@ -23,7 +26,8 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $admin->setPrenom('administrateur');
         $admin->setTelephone('0123456789');
         $admin->setMail('admin@admin.fr');
-        $admin->setCampus($this->getReference('rennes'));
+        $admin->setCampus($this->getReference('campus2'));
+        $this->addReference('user0', $admin);
         $manager->persist($admin);
 
 
@@ -34,9 +38,9 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $howel->setPrenom('howel');
         $howel->setTelephone('0101010101');
         $howel->setMail('howel.lemoallic2022@campus-eni.fr');
-        $howel->setCampus($this->getReference('rennes'));
+        $howel->setCampus($this->getReference('campus2'));
         $howel->setPhoto('user.jpg');
-        $this->addReference('howel', $howel);
+        $this->addReference('user1', $howel);
         $manager->persist($howel);
 
         $tanguy = new Participant();
@@ -46,9 +50,26 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $tanguy->setPrenom('tanguy');
         $tanguy->setTelephone('0202020202');
         $tanguy->setMail('tanguy.mathurin2022@campus-eni.fr');
-        $tanguy->setCampus($this->getReference('rennes'));
-        $this->addReference('tanguy', $tanguy);
+        $tanguy->setCampus($this->getReference('campus2'));
+        $this->addReference('user2', $tanguy);
         $manager->persist($tanguy);
+
+
+
+        $faker = Factory::create('fr_FR');
+
+        for ($i = 3; $i < 100; $i++) {
+            $participant = new Participant();
+            $participant->setPseudo($faker->userName());
+            $participant->setPassword($this->hasher->hashPassword($participant, $faker->password()));
+            $participant->setNom($faker->lastName());
+            $participant->setPrenom($faker->firstName());
+            $participant->setTelephone($faker->phoneNumber());
+            $participant->setMail($faker->email());
+            $participant->setCampus($this->getReference('campus'.rand(0,3)));
+            $this->addReference('user'.$i, $participant);
+            $manager->persist($participant);
+        }
 
 
         $manager->flush();

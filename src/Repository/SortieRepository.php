@@ -70,7 +70,7 @@ class SortieRepository extends ServiceEntityRepository
                 ->andWhere('etat.libelle != :historise')
                 ->setParameter('historise', 'Historisé');
         }elseif ($filtres->getDateFin()) {
-            $qb->andWhere('sortie.dateLimiteInscription <= :fin')
+            $qb->andWhere('sortie.dateHeureDebut <= :fin')
                 ->setParameter('fin', $filtres->getDateFin())
                 ->andWhere('etat.libelle != :historise')
                 ->setParameter('historise', 'Historisé');

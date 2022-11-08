@@ -17,7 +17,7 @@ class LieuFixtures extends Fixture implements DependentFixtureInterface
         $centreVillePloneis->setRue('Rue du centre ville');
         $centreVillePloneis->setLatitude(10.45);
         $centreVillePloneis->setLongitude(45.26);
-        $this->addReference('centreVillePloneis', $centreVillePloneis);
+        $this->addReference('lieu0', $centreVillePloneis);
         $manager->persist($centreVillePloneis);
 
         $campusKerLann = new Lieu();
@@ -26,7 +26,7 @@ class LieuFixtures extends Fixture implements DependentFixtureInterface
         $campusKerLann->setRue('Rue du campus');
         $campusKerLann->setLatitude(-60.63);
         $campusKerLann->setLongitude(33.52);
-        $this->addReference('campusKerLann', $campusKerLann);
+        $this->addReference('lieu1', $campusKerLann);
         $manager->persist($campusKerLann);
 
         $egliseDeChauray = new Lieu();
@@ -35,7 +35,7 @@ class LieuFixtures extends Fixture implements DependentFixtureInterface
         $egliseDeChauray->setRue('Rue de l\'église');
         $egliseDeChauray->setLatitude(40.98);
         $egliseDeChauray->setLongitude(-5.06);
-        $this->addReference('egliseDeChauray', $egliseDeChauray);
+        $this->addReference('lieu2', $egliseDeChauray);
         $manager->persist($egliseDeChauray);
 
         $placeDorvault = new Lieu();
@@ -44,7 +44,7 @@ class LieuFixtures extends Fixture implements DependentFixtureInterface
         $placeDorvault->setRue('Rue de la place d\'Orvault');
         $placeDorvault->setLatitude(89.75);
         $placeDorvault->setLongitude(50.20);
-        $this->addReference('placeDorvault', $placeDorvault);
+        $this->addReference('lieu3', $placeDorvault);
         $manager->persist($placeDorvault);
 
         $manager->flush();

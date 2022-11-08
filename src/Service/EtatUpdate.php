@@ -27,10 +27,15 @@ class EtatUpdate
 
         $dateDuJour = new \DateTime('now');
 
+
+
         $dateUnMoisAvant = new \DateTime('now');
         $dateUnMoisAvant->modify('-1 month');
 
         foreach ($sorties as $sortie) {
+
+            $dateFinSorties = clone $sortie->getDateHeureDebut();
+            $dateFinSorties->modify('+' . $sortie->getDuree() . ' minutes');
 
             if ($sortie->getDateHeureDebut() < $dateUnMoisAvant) {
                 foreach ($etats as $etat) {
@@ -39,7 +44,7 @@ class EtatUpdate
                     }
                 }
             } elseif ($sortie->getEtat() != $etatAnnuler) {
-                if ($sortie->getDateHeureDebut() == $dateDuJour) {
+                if ($sortie->getDateHeureDebut() < $dateDuJour and $dateFinSorties > $dateDuJour) {
                     foreach ($etats as $etat) {
                         if ($etat->getLibelle() == 'En cours') {
                             $sortie->setEtat($etat);
