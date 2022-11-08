@@ -213,7 +213,7 @@ table{
     margin-bottom: 2rem;
 }
 th{
-    padding: 20px 15px;
+    padding: 20px 8px;
     text-align: left;
     font-weight: 500;
     font-size: 19px;
@@ -305,8 +305,8 @@ Annuler une sortie
 
 .afficherDetailSortie {
     display: flex;
-    grid-gap: 7rem;
-    width: 100%;
+
+    width: 77%;
 
 
 }
