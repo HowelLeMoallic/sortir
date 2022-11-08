@@ -1,13 +1,43 @@
 {% extends 'base.html.twig' %}
-
+{% block javascripts %}
+    <script src="https://kit.fontawesome.com/37388df335.js" crossorigin="anonymous"></script>
+{% endblock %}
 {% block body %}
-    {{ form_start(formSortie) }}
-        {{ form_widget(formSortie) }}
-        <input type="Submit" value="Supprimer" name="Supprimer">
-        <button>
-            <a href="{{ path('accueil') }}">Annuler</a>
-        </button>
-    {{ form_end(formSortie) }}
+    <div class="container-modification-sortie">
+        {{ form_start(formSortie) }}
+        {{ form_row(formSortie.nom) }}
+        {{ form_row(formSortie.dateHeureDebut) }}
+        {{ form_row(formSortie.dateLimiteInscription) }}
+        {{ form_row(formSortie.nbInscriptionMax) }}
+        {{ form_row(formSortie.duree) }}
+        {{ form_row(formSortie.infosSortie) }}
+        {{ form_row(formSortie.campus) }}
+        <div>
+            <label for="villes">Ville</label>
+            <select name="villes" id="villes">
+                {% for ville in villes %}
+                    <option value="ville">{{ ville.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {{ form_row(formSortie.lieu) }}
+        <div id="ajout-lieu">
+            <label for="">Ajout d'un lieu</label>
+            <a href="{{ path('creation_lieu') }}"><i class="fa-solid fa-circle-plus"></i></a>
+        </div>
+        <div>
+            {{ form_row(formSortie.Enregistrer) }}
+            {{ form_row(formSortie.Publier) }}
+            <button type="submit"  name="Supprimer">Supprimer</button>
+            <button>
+                <a href="{{ path('accueil') }}">Annuler</a>
+            </button>
+        </div>
+
+
+        {{ form_end(formSortie) }}
+    </div>
+
 {% endblock %}
 
 {% block title %}
