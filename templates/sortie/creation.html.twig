@@ -2,34 +2,45 @@
 {% block title %}
     Création d'une sortie
 {% endblock %}
+{% block javascripts %}
+    <script src="https://kit.fontawesome.com/37388df335.js" crossorigin="anonymous"></script>
+{% endblock %}
 
 {% block body %}
-    {{ form_start(formCreation) }}
-        <div>
-            {{ form_row(formCreation.nom) }}
-            {{ form_row(formCreation.dateHeureDebut) }}
-            {{ form_row(formCreation.dateLimiteInscription) }}
-            {{ form_row(formCreation.nbInscriptionMax) }}
-            {{ form_row(formCreation.duree) }}
-            {{ form_row(formCreation.infosSortie) }}
-        </div>
-        <div>
-            {{ form_row(formCreation.campus) }}
-            <label for="villes">Ville</label>
-            <select name="villes" id="villes">
-                {% for ville in villes %}
-                    <option value="ville">{{ ville.nom }}</option>
-                {% endfor %}
-            </select>
-            <div id="lieu">
+    <div class="container-creation-sortie">
+        {{ form_start(formCreation) }}
+{#            <div>#}
+                {{ form_row(formCreation.organisateur) }}
+                {{ form_row(formCreation.nom) }}
+                {{ form_row(formCreation.dateHeureDebut) }}
+                {{ form_row(formCreation.dateLimiteInscription) }}
+                {{ form_row(formCreation.nbInscriptionMax) }}
+                {{ form_row(formCreation.duree) }}
+                {{ form_row(formCreation.infosSortie) }}
+                {{ form_row(formCreation.campus) }}
+                <div>
+                    <label for="villes">Ville</label>
+                    <select name="villes" id="villes">
+                        {% for ville in villes %}
+                            <option value="ville">{{ ville.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 {{ form_row(formCreation.lieu) }}
-                <a href="{{ path('creation_lieu') }}">+</a>
+                <div id="ajout-lieu">
+                    <label for="">Ajout d'un lieu</label>
+                    <a href="{{ path('creation_lieu') }}"><i class="fa-solid fa-circle-plus"></i></a>
+                </div>
+
+            <div class="button">
+                    {{ form_row(formCreation.Publier) }}
+                    {{ form_row(formCreation.Enregistrer) }}
+                {{ form_end(formCreation) }}
+                <button>
+                    <a href="{{ path('accueil') }}">Annuler</a>
+                </button>
             </div>
-        </div>
-    {{ form_end(formCreation) }}
-    <button>
-        <a href="{{ path('accueil') }}">Annuler</a>
-    </button>
+    </div>
 {% endblock %}
 
 

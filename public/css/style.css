@@ -202,16 +202,42 @@ th, td{
     width: 7rem;
 }
 
+/*
+
+Création d'une sortie
+
+ */
+.container-creation-sortie {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    grid-gap: 2rem;
+    margin-top: 2rem;
+}
+
+.container-creation-sortie div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    grid-gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.container-creation-sortie div input, textarea, select {
+    width: 20rem;
+
+}
+
+.container-creation-sortie button{
+    height: fit-content;
+}
+
+/*
+
+Message d'erreurs/succès
 
 
-
-
-
-
-
-
-
-
+ */
 .flash {
     padding: 1rem;
     color: black;
@@ -225,27 +251,3 @@ th, td{
     background-color: indianred;
 }
 
-
-
-
-/*form {*/
-/*    display: flex;*/
-/*    flex-direction: row;*/
-/*    justify-content: center;*/
-/*    align-content: center;*/
-/*}*/
-
-/*#sortie {*/
-/*    width: 35%;*/
-/*}*/
-
-/*#sortie div {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*}*/
-
-/*button, select, input, textArea {*/
-/*    text-transform: none;*/
-/*    margin-left: 10px;*/
-/*    margin-bottom: 10px;*/
-/*}*/
