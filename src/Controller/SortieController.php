@@ -166,10 +166,14 @@ class SortieController extends AbstractController
         $form = $this->createForm(CreationSortieType::class, $sortie);
         $form->handleRequest($request);
 
+        //dd($form->isValid());
         if($form->isSubmitted() && $form->isValid()){
+            //dd($sortie->getDateHeureDebut(), $sortie->getDateLimiteInscription());
             if($sortie->getDateHeureDebut() >= $sortie->getDateLimiteInscription()){
+                //dd('ok');
                 //En fonction du bouton clické
                 if($form->get('Publier')->isClicked()){
+
                     $this->modifEtat($sortie, $user, 'Ouvert', 'publiée');
                     return $this->redirectToRoute('accueil');
                 }

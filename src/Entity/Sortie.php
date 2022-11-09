@@ -57,7 +57,7 @@ class Sortie
     #[ORM\JoinColumn(nullable: false)]
     private ?Campus $campus = null;
 
-    #[Assert\NotBlank(message: 'L\'organisateur ne peut pas être null')]
+//    #[Assert\NotBlank(message: 'L\'organisateur ne peut pas être null')]
     #[ORM\ManyToOne(inversedBy: 'orgaSortie')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Participant $organisateur = null;

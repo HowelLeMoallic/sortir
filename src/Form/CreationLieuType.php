@@ -22,8 +22,12 @@ class CreationLieuType extends AbstractType
             ])
             ->add('nom')
             ->add('rue')
-            ->add('latitude', NumberType::class)
-            ->add('longitude', NumberType::class)
+            ->add('latitude', NumberType::class,[
+                'required' => false,
+            ])
+            ->add('longitude', NumberType::class,[
+                'required' => false
+            ])
             //->add('Envoyer', SubmitType::class)
         ;
     }
