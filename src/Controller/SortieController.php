@@ -36,6 +36,7 @@ class SortieController extends AbstractController
     {
         $user = $this->getUser();
 
+
         $filtresSorties = new FiltresSortiesFormModel();
 
         //Mettre par défaut le campus de l'utilisateur
@@ -48,6 +49,7 @@ class SortieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $sorties = $this->sortieRepository->findSortiesByFiltres($filtresSorties, $user);
+
         }
         else{
             $sorties = $this->sortieRepository->findSortiesByFiltres($filtresSorties, $user);
@@ -173,6 +175,7 @@ class SortieController extends AbstractController
                 }
                 else if($form->get('Enregistrer')->isClicked()){
                     $this->modifEtat($sortie, $user, 'En création', 'enregistrée');
+                    //dd($sortie);
                     return $this->redirectToRoute('accueil');
                 }
             }else{
@@ -180,6 +183,7 @@ class SortieController extends AbstractController
             }
 
         }
+
 
         return $this->render('sortie/creation.html.twig',[
             'formCreation' => $form->createView(),

@@ -85,7 +85,7 @@ button:active {
     transform: translate(2px, 2px);
 }
 
-input, select  {
+input, select, textarea {
     border-radius: 10px;
     padding-inline: 5px;
     cursor: pointer;
@@ -268,7 +268,7 @@ Annuler une sortie
 
 .section-champ {
     display: flex;
-
+    justify-content: flex-start;
     grid-gap: 2rem;
 }
 

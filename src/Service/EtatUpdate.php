@@ -22,9 +22,6 @@ class EtatUpdate
     {
 
         $etats = $this->etatRepository->findAll();
-        $etatAnnuler = in_array('Annule', $etats);
-        $etatEnCreation = in_array('En création', $etats);
-        $etatTerminer = in_array('Terminé', $etats);
 
         $dateDuJour = new \DateTime('now');
 
@@ -39,7 +36,7 @@ class EtatUpdate
             $dateFinSorties->modify('+' . $sortie->getDuree() . ' minutes');
 
 
-            if ($sortie->getEtat() != $etatAnnuler) {
+            if ($sortie->getEtat()->getLibelle() != 'Annulé') {
 
                 if ($sortie->getDateHeureDebut() < $dateDuJour and $dateFinSorties > $dateDuJour) {
 
@@ -52,14 +49,14 @@ class EtatUpdate
                     }
                 }
             }
-            if (($sortie->getParticipantsInscrits()->count() == $sortie->getNbInscriptionMax() || $sortie->getDateLimiteInscription() < $dateDuJour) and $sortie->getEtat() != $etatTerminer) {
+            if (($sortie->getParticipantsInscrits()->count() == $sortie->getNbInscriptionMax() || $sortie->getDateLimiteInscription() < $dateDuJour) and $sortie->getEtat()->getlibelle() != 'Terminé') {
                 foreach ($etats as $etat) {
                     if ($etat->getLibelle() == 'Fermé') {
                         $sortie->setEtat($etat);
                     }
                 }
             }
-            if ($sortie->getParticipantsInscrits()->count() < $sortie->getNbInscriptionMax() and $sortie->getEtat() != $etatEnCreation and $sortie->getDateLimiteInscription() > $dateDuJour) {
+            if ($sortie->getParticipantsInscrits()->count() < $sortie->getNbInscriptionMax() and $sortie->getEtat()->getLibelle() != 'En création' and $sortie->getDateLimiteInscription() > $dateDuJour) {
                 foreach ($etats as $etat) {
                     if ($etat->getLibelle() == 'Ouvert') {
                         $sortie->setEtat($etat);
