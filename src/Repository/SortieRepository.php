@@ -70,7 +70,8 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('debut', $filtres->getDateDebut())
                 ->andWhere('etat.libelle != :historise')
                 ->setParameter('historise', 'Historisé');
-        }elseif ($filtres->getDateFin()) {
+        }
+        if ($filtres->getDateFin()) {
             $qb->andWhere('sortie.dateHeureDebut <= :fin')
                 ->setParameter('fin', $filtres->getDateFin())
                 ->andWhere('etat.libelle != :historise')
@@ -82,7 +83,8 @@ class SortieRepository extends ServiceEntityRepository
                 ->andWhere('etat.libelle != :historise')
                 ->setParameter('historise', 'Historisé');
 
-        }elseif ($filtres->getInscrit()) {
+        }
+        if ($filtres->getInscrit()) {
             $qb->andWhere(':user MEMBER OF sortie.participantsInscrits')
                 ->setParameter('user', $user)
                 ->andWhere('etat.libelle != :historise')
@@ -90,7 +92,8 @@ class SortieRepository extends ServiceEntityRepository
                 ->andWhere('etat.libelle != :enCreation')
                 ->setParameter('enCreation', 'En création');
 
-        }elseif ($filtres->getNonInscrit()) {
+        }
+        if ($filtres->getNonInscrit()) {
             $qb->andWhere(':user NOT MEMBER sortie.participantsInscrits')
                 ->setParameter('user', $user)
                 ->andWhere('etat.libelle != :historise')
@@ -98,7 +101,8 @@ class SortieRepository extends ServiceEntityRepository
                 ->andWhere('etat.libelle != :enCreation')
                 ->setParameter('enCreation', 'En création');
 
-        }elseif ($filtres->getSortiesPassees()) {
+        }
+        if ($filtres->getSortiesPassees()) {
             $qb->andWhere('etat.libelle = :terminer')
                 ->setParameter('terminer', 'Terminé');
         }else{
