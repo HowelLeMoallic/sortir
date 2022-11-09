@@ -89,8 +89,12 @@ button:active {
 input, select, textarea {
     border-radius: 10px;
     padding-inline: 5px;
-    cursor: pointer;
 
+
+}
+
+input[type="checkbox"] {
+    cursor: pointer;
 }
 
 main {
