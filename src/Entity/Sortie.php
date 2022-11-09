@@ -17,26 +17,33 @@ class Sortie
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: 'Le nom ne peut pas être vide')]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\GreaterThanOrEqual('today')]
+    #[Assert\NotBlank(message: 'La date de début ne peut pas être null')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateHeureDebut = null;
 
+    #[Assert\NotBlank(message: 'La durée ne peut pas être null')]
     #[ORM\Column]
     private ?int $duree = null;
 
+    #[Assert\NotBlank(message: 'Le date limite d\'inscription ne peut pas être null')]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\LessThan(propertyPath: 'dateHeureDebut')]
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
+    #[Assert\NotBlank(message: 'Le nombre d\'inscription ne peut pas être null')]
     #[ORM\Column]
     private ?int $nbInscriptionMax = null;
 
+    #[Assert\NotBlank(message: 'Les informations de la sortie ne peuvent pas être null')]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $infosSortie = null;
 
+    #[Assert\NotBlank(message: 'Le lieu ne peut pas être null')]
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Lieu $lieu = null;
@@ -45,10 +52,12 @@ class Sortie
     #[ORM\JoinColumn(nullable: false)]
     private ?Etat $etat = null;
 
+    #[Assert\NotBlank(message: 'Le campus ne peut pas être null')]
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Campus $campus = null;
 
+    #[Assert\NotBlank(message: 'L\'organisateur ne peut pas être null')]
     #[ORM\ManyToOne(inversedBy: 'orgaSortie')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Participant $organisateur = null;

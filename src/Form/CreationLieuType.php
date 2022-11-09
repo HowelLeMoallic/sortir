@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\Lieu;
 use App\Entity\Ville;
-use Doctrine\DBAL\Types\FloatType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -23,8 +22,8 @@ class CreationLieuType extends AbstractType
             ])
             ->add('nom')
             ->add('rue')
-            ->add('latitude')
-            ->add('longitude')
+            ->add('latitude', NumberType::class)
+            ->add('longitude', NumberType::class)
             //->add('Envoyer', SubmitType::class)
         ;
     }
