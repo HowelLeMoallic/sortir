@@ -421,6 +421,7 @@ form section{
     display: flex;
     flex-direction: row;
     justify-content: center;
+    grid-gap: 10rem;
 }
 
 

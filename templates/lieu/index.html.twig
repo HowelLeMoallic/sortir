@@ -7,10 +7,15 @@
     {{ form_start(formLieu) }}
         {{ form_widget(formLieu) }}
         <section>
-            <button type="submit">
+            <button form="creation_lieu" type="submit">
                 Envoyer
+            </button>
+
+            <button type="button">
+                <a href="{{ path('creation_sortie') }}">Annuler</a>
             </button>
         </section>
     {{ form_end(formLieu) }}
+
 
 {% endblock %}
