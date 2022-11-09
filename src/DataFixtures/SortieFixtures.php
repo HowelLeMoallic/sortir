@@ -68,7 +68,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         $faker = Factory::create('fr_FR');
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 200; $i++) {
             $sortie = new Sortie();
             $sortie->setNom($faker->sentence(3));
             $sortie->setDateHeureDebut($faker->dateTimeBetween('now', '+ 2years'));
@@ -80,7 +80,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
             $sortie->setInfosSortie($faker->realText(100));
             $sortie->setLieu($this->getReference('lieu'.rand(0,3)));
             $sortie->setNbInscriptionMax($faker->numberBetween(1, 100));
-            $sortie->setOrganisateur($this->getReference('user'.rand(0,99)));
+            $sortie->setOrganisateur($this->getReference('user'.rand(0,24)));
             $manager->persist($sortie);
         }
 

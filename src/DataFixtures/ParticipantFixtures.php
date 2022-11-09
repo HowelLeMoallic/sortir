@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Participant;
+use App\Service\ImageUpload;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -12,8 +13,9 @@ use Faker\ORM\Doctrine\Populator;
 
 class ParticipantFixtures extends Fixture implements DependentFixtureInterface
 {
-    public function __construct(private UserPasswordHasherInterface $hasher)
+    public function __construct(private UserPasswordHasherInterface $hasher, private ImageUpload $imageUpload)
     {
+
     }
 
     public function load(ObjectManager $manager): void
@@ -27,6 +29,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $admin->setTelephone('0123456789');
         $admin->setMail('admin@admin.fr');
         $admin->setCampus($this->getReference('campus2'));
+        $admin->setPhoto('ludoGandalf.jpg');
         $this->addReference('user0', $admin);
         $manager->persist($admin);
 
@@ -58,7 +61,7 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
 
         $faker = Factory::create('fr_FR');
 
-        for ($i = 3; $i < 100; $i++) {
+        for ($i = 3; $i < 25; $i++) {
             $participant = new Participant();
             $participant->setPseudo($faker->userName());
             $participant->setPassword($this->hasher->hashPassword($participant, $faker->password()));
