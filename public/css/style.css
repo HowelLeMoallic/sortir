@@ -85,7 +85,12 @@ button:active {
     transform: translate(2px, 2px);
 }
 
+input, select  {
+    border-radius: 10px;
+    padding-inline: 5px;
+    cursor: pointer;
 
+}
 
 main {
     flex: 1;
