@@ -28,19 +28,17 @@ class ParticipantController extends AbstractController
         //récupère les infos saisies et modifie l'objet user
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if($form->isSubmitted() && $form->isValid()) {
 
             /** @var UploadedFile $brochureFile */
             $imageProfil = $form->get('image')->getData();
             if ($imageProfil) {
 
-                //dd($user);
                 $image = $imageUpload->upload($imageProfil, $user);
                 $user->setPhoto($image);
             }
 
-            if (!isEmpty($user->getPassword()))
-            {
+            if (!isEmpty($user->getPassword())) {
                 // encode the plain password
                 $user->setPassword($userPasswordHasher->hashPassword($user, $form->get('plainPassword')->getData()));
             }
@@ -52,6 +50,7 @@ class ParticipantController extends AbstractController
             //Message de success
             $this->addFlash('success', 'Profil modifié avec succès.');
             return $this->redirectToRoute('accueil');
+
         }
 
         // Pour que la vue puisse afficher le formulaire, on doit lui envoyer le formulaire généré, avec $form->createView()
@@ -67,11 +66,17 @@ class ParticipantController extends AbstractController
     {
         $user = $participantRepository->find($id);
 
+        if ($user){
 
-        return $this->render('participant/profilOrganisateur.html.twig',[
-            'organisateur' => $user,
+            return $this->render('participant/profilOrganisateur.html.twig',[
+                'organisateur' => $user,
 
-        ]);
+            ]);
+
+        }
+
+        $this->addFlash('error', 'Cet utilisateur n\'existe pas' );
+       return $this->redirectToRoute('accueil');
 
     }
 

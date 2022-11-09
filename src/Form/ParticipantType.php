@@ -15,11 +15,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\File;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
 
 class ParticipantType extends AbstractType
 {
@@ -29,19 +26,22 @@ class ParticipantType extends AbstractType
         $builder
 
             ->add('pseudo', TextType::class,[
-                'label' => 'Pseudo :'
+                'label' => 'Pseudo :',
             ])
             ->add('nom', TextType::class,[
-                'label' => 'Nom :'
+                'label' => 'Nom :',
             ])
             ->add('prenom', TextType::class,[
-                'label' => 'Prénom :'
+                'label' => 'Prénom :',
+
             ])
             ->add('telephone', TextType::class,[
-                'label' => 'Téléphone :'
+                'label' => 'Téléphone :',
+
             ])
             ->add('mail', EmailType::class,[
-                'label' => 'Email :'
+                'label' => 'Email :',
+
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -70,7 +70,8 @@ class ParticipantType extends AbstractType
                 },
                 'choice_label' => 'nom',
                 'expanded' => false,
-                'multiple' => false
+                'multiple' => false,
+
                 ]
             )
             ->add('image', FileType::class, [
