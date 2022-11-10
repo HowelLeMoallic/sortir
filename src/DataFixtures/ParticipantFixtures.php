@@ -35,10 +35,10 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
 
 
         $howel = new Participant();
-        $howel->setPseudo('howel');
+        $howel->setPseudo('Wewel');
         $howel->setPassword($this->hasher->hashPassword($howel, 'howel'));
         $howel->setNom('Le Moallic');
-        $howel->setPrenom('howel');
+        $howel->setPrenom('Howel');
         $howel->setTelephone('0101010101');
         $howel->setMail('howel.lemoallic2022@campus-eni.fr');
         $howel->setCampus($this->getReference('campus2'));
@@ -47,10 +47,10 @@ class ParticipantFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($howel);
 
         $tanguy = new Participant();
-        $tanguy->setPseudo('tanguy');
+        $tanguy->setPseudo('AlsoTanguy');
         $tanguy->setPassword($this->hasher->hashPassword($tanguy, 'tanguy'));
         $tanguy->setNom('Mathurin');
-        $tanguy->setPrenom('tanguy');
+        $tanguy->setPrenom('Tanguy');
         $tanguy->setTelephone('0202020202');
         $tanguy->setMail('tanguy.mathurin2022@campus-eni.fr');
         $tanguy->setCampus($this->getReference('campus2'));

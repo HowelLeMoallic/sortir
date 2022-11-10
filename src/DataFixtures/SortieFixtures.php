@@ -20,7 +20,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $piqueNique->setDuree(300);
         $piqueNique->setCampus($this->getReference('campus0'));
         $piqueNique->setEtat($this->getReference('etat1'));
-        $piqueNique->setInfosSortie('pique Nique avec les étudiants');
+        $piqueNique->setInfosSortie('Pique Nique avec les étudiants');
         $piqueNique->setLieu($this->getReference('lieu0'));
         $piqueNique->setNbInscriptionMax(1);
         $piqueNique->setOrganisateur($this->getReference('user1'));
@@ -40,13 +40,13 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($patinoire);
 
         $patinoire1 = new Sortie();
-        $patinoire1->setNom('Patinoire1');
+        $patinoire1->setNom('Bowling');
         $patinoire1->setDateHeureDebut(new \DateTime('2022-11-08 09:39:40'));
         $patinoire1->setDateLimiteInscription(new \DateTime('2022-11-03 09:39:40'));
         $patinoire1->setDuree(180);
         $patinoire1->setCampus($this->getReference('campus2'));
         $patinoire1->setEtat($this->getReference('etat1'));
-        $patinoire1->setInfosSortie('patinoire avec les étudiants');
+        $patinoire1->setInfosSortie('Bowling avec les étudiants');
         $patinoire1->setLieu($this->getReference('lieu1'));
         $patinoire1->setNbInscriptionMax(8);
         $patinoire1->setOrganisateur($this->getReference('user2'));
@@ -70,7 +70,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         for ($i = 0; $i < 200; $i++) {
             $sortie[$i] = new Sortie();
-            $sortie[$i]->setNom($faker->sentence(3));
+            $sortie[$i]->setNom($faker->title());
             $sortie[$i]->setDateHeureDebut($faker->dateTimeBetween('now', '+ 2years'));
             $dateSortie = clone $sortie[$i]->getDateHeureDebut();
             $sortie[$i]->setDateLimiteInscription($faker->dateTimeBetween('now', $dateSortie));
