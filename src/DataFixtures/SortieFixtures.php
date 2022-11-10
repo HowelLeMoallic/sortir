@@ -41,8 +41,8 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         $patinoire1 = new Sortie();
         $patinoire1->setNom('Bowling');
-        $patinoire1->setDateHeureDebut(new \DateTime('2022-11-08 09:39:40'));
-        $patinoire1->setDateLimiteInscription(new \DateTime('2022-11-03 09:39:40'));
+        $patinoire1->setDateHeureDebut(new \DateTime('2022-11-16 09:39:40'));
+        $patinoire1->setDateLimiteInscription(new \DateTime('2022-11-15 09:39:40'));
         $patinoire1->setDuree(180);
         $patinoire1->setCampus($this->getReference('campus2'));
         $patinoire1->setEtat($this->getReference('etat1'));
@@ -54,8 +54,8 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         $patinoire2 = new Sortie();
         $patinoire2->setNom('Patinoire2');
-        $patinoire2->setDateHeureDebut(new \DateTime('2022-11-08 09:39:40'));
-        $patinoire2->setDateLimiteInscription(new \DateTime('2022-11-03 09:39:40'));
+        $patinoire2->setDateHeureDebut(new \DateTime('2022-11-14 09:39:40'));
+        $patinoire2->setDateLimiteInscription(new \DateTime('2022-11-12 09:39:40'));
         $patinoire2->setDuree(180);
         $patinoire2->setCampus($this->getReference('campus2'));
         $patinoire2->setEtat($this->getReference('etat0'));
@@ -70,7 +70,7 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
 
         for ($i = 0; $i < 200; $i++) {
             $sortie[$i] = new Sortie();
-            $sortie[$i]->setNom($faker->title());
+            $sortie[$i]->setNom($faker->sentence(3));
             $sortie[$i]->setDateHeureDebut($faker->dateTimeBetween('now', '+ 2years'));
             $dateSortie = clone $sortie[$i]->getDateHeureDebut();
             $sortie[$i]->setDateLimiteInscription($faker->dateTimeBetween('now', $dateSortie));
