@@ -15,24 +15,24 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
     {
         $piqueNique = new Sortie();
         $piqueNique->setNom('Pique-nique');
-        $piqueNique->setDateHeureDebut(new \DateTime('2022-11-03 09:39:40'));
-        $piqueNique->setDateLimiteInscription(new \DateTime());
+        $piqueNique->setDateHeureDebut(new \DateTime('2022-11-12 09:39:40'));
+        $piqueNique->setDateLimiteInscription(new \DateTime('2022-11-11 09:39:40'));
         $piqueNique->setDuree(300);
         $piqueNique->setCampus($this->getReference('campus0'));
         $piqueNique->setEtat($this->getReference('etat1'));
         $piqueNique->setInfosSortie('pique Nique avec les étudiants');
         $piqueNique->setLieu($this->getReference('lieu0'));
-        $piqueNique->setNbInscriptionMax(10);
+        $piqueNique->setNbInscriptionMax(1);
         $piqueNique->setOrganisateur($this->getReference('user1'));
         $manager->persist($piqueNique);
 
         $patinoire = new Sortie();
         $patinoire->setNom('Patinoire');
-        $patinoire->setDateHeureDebut(new \DateTime('2022-11-08 09:39:40'));
-        $patinoire->setDateLimiteInscription(new \DateTime('2022-11-03 09:39:40'));
+        $patinoire->setDateHeureDebut(new \DateTime('2022-11-15 09:39:40'));
+        $patinoire->setDateLimiteInscription(new \DateTime('2022-11-13 09:39:40'));
         $patinoire->setDuree(180);
         $patinoire->setCampus($this->getReference('campus2'));
-        $patinoire->setEtat($this->getReference('etat3'));
+        $patinoire->setEtat($this->getReference('etat0'));
         $patinoire->setInfosSortie('patinoire avec les étudiants');
         $patinoire->setLieu($this->getReference('lieu1'));
         $patinoire->setNbInscriptionMax(8);
@@ -69,19 +69,19 @@ class SortieFixtures extends Fixture implements DependentFixtureInterface
         $faker = Factory::create('fr_FR');
 
         for ($i = 0; $i < 200; $i++) {
-            $sortie = new Sortie();
-            $sortie->setNom($faker->sentence(3));
-            $sortie->setDateHeureDebut($faker->dateTimeBetween('now', '+ 2years'));
-            $dateSortie = clone $sortie->getDateHeureDebut();
-            $sortie->setDateLimiteInscription($faker->dateTimeBetween('now', $dateSortie));
-            $sortie->setDuree($faker->randomNumber());
-            $sortie->setCampus($this->getReference('campus'.rand(0,3)));
-            $sortie->setEtat($this->getReference('etat'.rand(0,6)));
-            $sortie->setInfosSortie($faker->realText(100));
-            $sortie->setLieu($this->getReference('lieu'.rand(0,3)));
-            $sortie->setNbInscriptionMax($faker->numberBetween(1, 100));
-            $sortie->setOrganisateur($this->getReference('user'.rand(0,24)));
-            $manager->persist($sortie);
+            $sortie[$i] = new Sortie();
+            $sortie[$i]->setNom($faker->sentence(3));
+            $sortie[$i]->setDateHeureDebut($faker->dateTimeBetween('now', '+ 2years'));
+            $dateSortie = clone $sortie[$i]->getDateHeureDebut();
+            $sortie[$i]->setDateLimiteInscription($faker->dateTimeBetween('now', $dateSortie));
+            $sortie[$i]->setDuree($faker->randomNumber());
+            $sortie[$i]->setCampus($this->getReference('campus'.rand(0,3)));
+            $sortie[$i]->setEtat($this->getReference('etat'.rand(0,6)));
+            $sortie[$i]->setInfosSortie($faker->realText(100));
+            $sortie[$i]->setLieu($this->getReference('lieu'.rand(0,3)));
+            $sortie[$i]->setNbInscriptionMax($faker->numberBetween(1, 100));
+            $sortie[$i]->setOrganisateur($this->getReference('user'.rand(0,24)));
+            $manager->persist($sortie[$i]);
         }
 
 

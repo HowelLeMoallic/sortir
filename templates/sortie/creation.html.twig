@@ -35,13 +35,13 @@
                     <a href="{{ path('creation_lieu') }}"><i class="fa-solid fa-circle-plus"></i></a>
                 </div>
 
-            <div >
+                <div>
                     {{ form_row(formCreation.Publier) }}
                     {{ form_row(formCreation.Enregistrer) }}
-                {{ form_end(formCreation) }}
+                    {{ form_end(formCreation) }}
 
-                <a href="{{ path('accueil') }}"><button type="button">Annuler</button></a>
-            </div>
+                    <a href="{{ path('accueil') }}"><button type="button">Annuler</button></a>
+                </div>
     </div>
 {% endblock %}
 
