@@ -2,12 +2,6 @@
 
 {% block title %}{{ parent() }} - Accueil{% endblock %}
 {% block javascripts %}
-    <script>
-        $(window).on("load resize ", function() {
-            var scrollWidth = $('tbody').width();
-            $('theader').css({'padding-right':scrollWidth});
-        }).resize();
-    </script>
 {% endblock %}
 
 {% block body %}
@@ -74,7 +68,7 @@
     {# Afficher la liste des sorties #}
     <section id="liste-sorties">
         <div class="tbl-header">
-            <table cellpadding="0" cellspacing="0" border="0">
+            <table>
                 <thead>
                 <tr>
                     <th>Nom de la sortie</th>
@@ -90,7 +84,7 @@
             </table>
         </div>
         <div class="tbl-content">
-            <table cellpadding="0" cellspacing="0" border="0">
+            <table>
                 <tbody>
 
                     {% for sortie in sorties %}
